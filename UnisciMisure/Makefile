@@ -1,8 +1,6 @@
 CXX = gcc
-LD  = ld
 
 CFLAGS  = -O3 -Wall -Wextra -g
-LDFLAGS = 
 
 SRCDIR     = src
 BINDIR     = bin
