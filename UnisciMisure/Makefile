@@ -16,23 +16,45 @@
 
 CXX = gcc
 
-INCDIR  = include/intf
-CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)
+INCDIR  = include
+CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf
+LFLAGS  = -lm
 
 SRCDIR     = src
+OBJDIR     = obj
 BINDIR     = bin
 OUTFILE    = uniscimisure
 OUTFILEEXT = 
+
+rwildcard = $(foreach d, $(wildcard $(1:=/*)), $(call rwildcard ,$d, $2) $(filter $(subst *, %, $2), $d))
+
+INC = $(call rwildcard, $(INCDIR), *.c)
+SRC = $(call rwildcard, $(SRCDIR), *.c)
+
+OBJS  = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
+OBJS += $(patsubst $(INCDIR)/%.c, $(OBJDIR)/%.o, $(INC))
+
+DIRS  = $(wildcard $(SRCDIR)/*)
+DIRS += $(wildcard $(INCDIR)/*)
 
 ifeq ($(OS), Windows_NT)
 	OUTFILEEXT = .exe
 endif
 
-all:
-	$(CXX) $(CFLAGS) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(SRCDIR)/main.c
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(CXX) $(CFLAGS) -c $^ -o $@
+
+$(OBJDIR)/%.o: $(INCDIR)/%.c
+	$(CXX) $(CFLAGS) -c $^ -o $@
+
+all: $(OBJS) link
+
+link:
+	$(CXX) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(OBJS) $(LFLAGS)
 
 run:
 	$(BINDIR)/$(OUTFILE)$(OUTFILEEXT)
 
 setup:
 	@ mkdir $(BINDIR)
+	@ mkdir $(OBJDIR)
