@@ -16,26 +16,27 @@ limitations under the License.
 ***************************************************************************/
 
 
-#ifndef FILELIB_H
-#define FILELIB_H
+#ifndef CSVLIB_H
+#define CSVLIB_H
 
-    #include <stdio.h>
-    #include <stdint.h>
+    #include <filelib.h>
+    #include <stdbool.h>
 
-    // Codici di errore e successo
-    #define FILE_ERROR NULL     // NullPointer, utilizzata per verificare se si è verificato un errore nell'apertura di una file stream
-    #define FILE_OK 0           // Valore di successo restituito da funzioni/procedure
+    #define MAX_STR_LEN 200     // Dimensione massima di una stringa
 
 
-    typedef struct FileDefinition {
-        FILE*    FilePionter;
-        uint64_t FileSize;
-    } file_t;
+    typedef struct CSVFileDefinition {
+        file_t       File;
+        const char** Columns;
+        const char   Separator;
+        const bool   ReadOnly;
+    } csv_t;
+    
 
+    csv_t       csvOpenRead         (const char* __path);
+    csv_t       csvOpenWrite        (const char* __path, const char* headingCols, ...);
+    csv_t       csvAppendEntry      (csv_t* __csv, const char* entryCols, ...);
+    char**      csvGetEntry         (csv_t* __csv, int n);
+    char***     csvGetEntrys        (csv_t* __csv);
 
-    file_t fileOpenRead(const char* __path);
-    file_t fileOpenWrite(const char* __path);
-
-
-
-#endif // FILELIB_H
+#endif // CSVLIB_H

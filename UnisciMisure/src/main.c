@@ -69,8 +69,8 @@ POSIX:  make run
 
 
 // Massimi file
+#define MAX_STR_LEN 200
 #define MAX_LINES   1000    // Massimo numero di linee
-#define MAX_STR_LEN 200     // Dimensione massima di una stringa
 
 // Codici di errore e successo
 #define FILE_ERROR NULL     // NullPointer, utilizzata per verificare se si è verificato un errore nell'apertura di una file stream
