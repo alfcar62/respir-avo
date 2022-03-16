@@ -16,7 +16,8 @@
 
 CXX = gcc
 
-CFLAGS  = -O3 -Wall -Wextra -g
+INCDIR  = include/intf
+CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)
 
 SRCDIR     = src
 BINDIR     = bin
