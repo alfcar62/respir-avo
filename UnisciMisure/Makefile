@@ -28,14 +28,14 @@ OUTFILEEXT =
 
 rwildcard = $(foreach d, $(wildcard $(1:=/*)), $(call rwildcard ,$d, $2) $(filter $(subst *, %, $2), $d))
 
-INC = $(call rwildcard, $(INCDIR), *.c)
+INC = $(call rwildcard, $(INCDIR)/impl, *.c)
 SRC = $(call rwildcard, $(SRCDIR), *.c)
 
 OBJS  = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
-OBJS += $(patsubst $(INCDIR)/%.c, $(OBJDIR)/%.o, $(INC))
+OBJS += $(patsubst $(INCDIR)/impl/%.c, $(OBJDIR)/%.o, $(INC))
 
 DIRS  = $(wildcard $(SRCDIR)/*)
-DIRS += $(wildcard $(INCDIR)/*)
+DIRS += $(wildcard $(INCDIR)/impl/*)
 
 ifeq ($(OS), Windows_NT)
 	OUTFILEEXT = .exe
@@ -44,7 +44,7 @@ endif
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CXX) $(CFLAGS) -c $^ -o $@
 
-$(OBJDIR)/%.o: $(INCDIR)/%.c
+$(OBJDIR)/%.o: $(INCDIR)/impl/%.c
 	$(CXX) $(CFLAGS) -c $^ -o $@
 
 all: $(OBJS) link
