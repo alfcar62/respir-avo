@@ -7,7 +7,7 @@
 [issues-shield]: https://img.shields.io/github/issues/alfcar62/respir-avo.svg?style=flat-square
 [issues-url]: https://github.com/alfcar62/respir-avo/issues
 [license-shield]: https://img.shields.io/github/license/alfcar62/respir-avo.svg?style=flat-square
-[license-url]: https://github.com/alfcar62/respir-avo/blob/master/LICENSE.txt
+[license-url]: https://github.com/alfcar62/respir-avo/blob/master/LICENSE
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
