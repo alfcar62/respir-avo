@@ -65,6 +65,7 @@ POSIX:  make run
 #include <stdbool.h>
 #include <math.h>
 #include <stdint.h>
+#include <filelib.h>
 
 
 // Massimi file
@@ -121,47 +122,14 @@ int main()
     int misura;
     char mis_name[10];
 
-    FILE *fp; // pointer al file delle posizioni
-    FILE *fm; // pointer al file delle misure
-    FILE *fo; // pointer al file di output
-
     menu(fp_name, fm_name, fo_name, &misura, mis_name);
 
     printf("Inizio elaborazione\n");
     printf("\n........................\n");
 
-    fp = fopen(fp_name, "r"); // apertura in modalit� lettura
-    if (fp == FILE_ERROR)
-    {
-        printf("\nErrore in apertura file:-%s- non  esistente: \n", fp_name);
-        return ERR;
-    }
-
-    fm = fopen(fm_name, "r"); // apertura in modalit� lettura
-    if (fm == FILE_ERROR)
-    {
-        printf("\nErrore in apertura file:-%s- non  esistente: \n", fm_name);
-        return ERR;
-    }
-
-    fo = fopen(fo_name, "w+"); // apertura in modalit� lettura/scrittura
-    if (fo == FILE_ERROR)
-    {
-        printf("\nErrore in apertura file:-%s- non  esistente: \n", fo_name);
-        return ERR;
-    }
-
-    if (fgets(str, MAX_STR_LEN, fp) == NULL) // skip prima riga (header)
-    {
-        printf("\nErrore in fgets() skip file posizioni\n");
-        return ERR;
-    }
-
-    if (fgets(str, MAX_STR_LEN, fm) == NULL) // skip prima riga (header)
-    {
-        printf("\nErrore in fgets() skip  file misure()\n");
-        return ERR;
-    }
+    FILE *fp = fileOpenRead(fp_name);  // pointer al file delle posizioni
+    FILE *fm = fileOpenRead(fm_name);  // pointer al file delle misure
+    FILE *fo = fileOpenWrite(fo_name); // pointer al file di output
 
     // Prima riga intestazione
     fprintf(fo, "timestamp,latitude,longitude,%s,superato limite, percentuale sup", mis_name);
