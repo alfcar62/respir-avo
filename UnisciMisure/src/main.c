@@ -15,15 +15,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***************************************************************************/
 
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-#include <math.h>
-#include <stdint.h>
-
-
 /******************************************************************************
 @data: Marzo 2022
 @auhor: Classe 3CI as 2021/22
@@ -66,6 +57,14 @@ POSIX:  make
 WINDOWS: mingw32-make run
 POSIX:  make run
 ******************************************************************************/
+
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>
+#include <stdint.h>
 
 
 // Massimi file
