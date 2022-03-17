@@ -34,10 +34,10 @@ static FILE* __OpenFileStream__(const char* __path, const char* __mode)
 
 FILE* fileOpenRead(const char* __path)
 {
-    return __OpenFile__(__path, READ_MODE);
+    return __OpenFileStream__(__path, READ_MODE);
 }
 
 FILE* fileOpenWrite(const char* __path)
 {
-    return __OpenFile__(__path, WRITE_MODE);
+    return __OpenFileStream__(__path, WRITE_MODE);
 }
