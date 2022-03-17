@@ -26,12 +26,12 @@ limitations under the License.
 
 
     typedef struct CSVFileDefinition {
-        file_t       File;
+        FILE*        File;
         const char** Columns;
         const char   Separator;
         const bool   ReadOnly;
     } csv_t;
-    
+
 
     csv_t       csvOpenRead         (const char* __path);
     csv_t       csvOpenWrite        (const char* __path, const char* headingCols, ...);

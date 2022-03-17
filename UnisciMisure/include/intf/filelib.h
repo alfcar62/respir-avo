@@ -27,15 +27,7 @@ limitations under the License.
     #define FILE_OK 0           // Valore di successo restituito da funzioni/procedure
 
 
-    typedef struct FileDefinition {
-        FILE*    FilePionter;
-        uint64_t FileSize;
-    } file_t;
-
-
-    file_t fileOpenRead(const char* __path);
-    file_t fileOpenWrite(const char* __path);
-
-
+    FILE* fileOpenRead(const char* __path);
+    FILE* fileOpenWrite(const char* __path);
 
 #endif // FILELIB_H
