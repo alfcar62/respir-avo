@@ -17,7 +17,7 @@
 CXX = gcc
 
 INCDIR  = include
-CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf
+CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf -I "src"
 LFLAGS  = -lm
 
 SRCDIR     = src
