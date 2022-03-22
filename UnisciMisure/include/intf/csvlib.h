@@ -25,18 +25,6 @@ limitations under the License.
     #define MAX_STR_LEN 200     // Dimensione massima di una stringa
 
 
-    typedef struct CSVFileDefinition {
-        FILE*        File;
-        const char** Columns;
-        const char   Separator;
-        const bool   ReadOnly;
-    } csv_t;
-
-
-    csv_t       csvOpenRead         (const char* __path);
-    csv_t       csvOpenWrite        (const char* __path, const char* headingCols, ...);
-    csv_t       csvAppendEntry      (csv_t* __csv, const char* entryCols, ...);
-    char**      csvGetEntry         (csv_t* __csv, int n);
-    char***     csvGetEntrys        (csv_t* __csv);
+    void      csvGetEntries     (FILE *__csvf, ...);
 
 #endif // CSVLIB_H
