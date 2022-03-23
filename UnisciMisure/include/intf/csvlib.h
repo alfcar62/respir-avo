@@ -25,7 +25,7 @@ limitations under the License.
     #define MAX_STR_LEN 200     // Maximum string length
     #define IGNORE      NULL    // Inogres a column
 
-    void      csvGetEntries     (FILE *__csvf, ...);
+    int       csvGetEntries     (FILE *__csvf, ...);
     void      csvIgnoreLine     (FILE *__csvf);
 
 #endif // CSVLIB_H
