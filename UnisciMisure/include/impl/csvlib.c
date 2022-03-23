@@ -25,15 +25,10 @@ limitations under the License.
 #define COMMA    ','
 
 
-static bool __AcceptableValue__(char __val)
-{
-    return __val != NEW_LINE &&
-           __val != END;
-}
-
 static bool __IsSeparator__(char __val)
 {
-    return __val == COMMA;
+    return __val == COMMA ||
+           __val == NEW_LINE;
 }
 
 
@@ -46,8 +41,8 @@ void csvGetEntries(FILE *__csvf, ...)
     char  _buffer[MAX_STR_LEN];     // Line buffer
     char *_buffptr = _buffer;       // Base pointer of the buffer
 
-    // Reads characters from the file until the EOL is reached
-    while (__AcceptableValue__(*_buffptr = fgetc(__csvf)))
+    // Reads characters from the file
+    while ((*_buffptr = fgetc(__csvf)))
     {
         if (__IsSeparator__(*_buffptr)) // If a separator is reached
         {
@@ -55,12 +50,17 @@ void csvGetEntries(FILE *__csvf, ...)
             void *_var = va_arg(_arguments, void*);
             char *_fmt = va_arg(_arguments, char*);
 
-            // Adds the NULL terminator to the buffer for security
+            // Adds the NULL terminator to the buffer for safety
+            // And also backs up the value for later inspection
+            char _old = *_buffptr;
             *_buffptr = END;
 
             // Reads from the buffer using the format string
             // If _var points to NULL, the operation is aborted as the column is disabled
             if (_var != NULL) sscanf(_buffer, _fmt, _var);
+
+            // If the separator is a new line, all entries have been read and the loop breaks
+            if (_old == NEW_LINE) break;
 
             // Resets the buffptr to the buffer's base
             _buffptr = _buffer;
@@ -72,4 +72,10 @@ void csvGetEntries(FILE *__csvf, ...)
     }
 
     va_end(_arguments);
+}
+
+void csvIgnoreLine(FILE* __csvf)
+{
+    // Reads from the file stream until a new line is reached
+    while (fgetc(__csvf) != NEW_LINE);
 }
