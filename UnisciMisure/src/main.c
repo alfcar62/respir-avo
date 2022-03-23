@@ -66,6 +66,7 @@ POSIX:  make run
 #include <math.h>
 #include <stdint.h>
 #include <filelib.h>
+#include <csvlib.h>
 
 
 // Massimi file

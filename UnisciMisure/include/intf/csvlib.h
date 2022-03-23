@@ -22,8 +22,8 @@ limitations under the License.
     #include <filelib.h>
     #include <stdbool.h>
 
-    #define MAX_STR_LEN 200     // Dimensione massima di una stringa
-
+    #define MAX_STR_LEN 200     // Maximum string length
+    #define IGNORE      NULL    // Inogres a column
 
     void      csvGetEntries     (FILE *__csvf, ...);
     void      csvIgnoreLine     (FILE *__csvf);
