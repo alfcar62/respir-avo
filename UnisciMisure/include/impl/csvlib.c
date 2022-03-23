@@ -74,7 +74,7 @@ void csvGetEntries(FILE *__csvf, ...)
     va_end(_arguments);
 }
 
-void csvIgnoreLine(FILE* __csvf)
+void csvIgnoreLine(FILE *__csvf)
 {
     // Reads from the file stream until a new line is reached
     while (fgetc(__csvf) != NEW_LINE);
