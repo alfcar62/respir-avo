@@ -68,6 +68,7 @@ POSIX:  make run
 #include <filelib.h>
 #include <csvlib.h>
 #include <assertlib.h>
+#include <siglib.h>
 
 
 // Massimi file
@@ -110,6 +111,9 @@ int     cnt_mis  =  0;
 
 int main(int argc, char const *argv[])
 {
+    // Inizializza gestore segnali
+    sigSetup();
+
     // Si assicura che siano passati tutti i tre argomenti richiesti
     massert(4 == argc, -1, "Numero insufficiente di argomenti: Richiesti 3, dati %d", argc - 1);
 
