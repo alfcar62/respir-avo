@@ -95,6 +95,8 @@ POSIX:  make run
 /*****************************************************************************************************************************************
 RET TYPE    NAME            ARGUMENTS
 /*****************************************************************************************************************************************/
+int         leggi_pos       (FILE *file, unsigned long int *time, float *lat, float *lon);
+int         leggi_mis       (FILE *file, unsigned long int *time, int *no2, int *voc, int *pm10, int *pm25);
 int         check_limite    (int tipo_mis, float misura, char superato[], int *perc_sup);
 void        menu            (int *scelta, char nome_mis[]);
 float       get_media       (int arr_mis[], int i);
@@ -140,16 +142,25 @@ int main(int argc, char const **argv)
     FILE *fp = fileOpenRead("posizioni.csv");  // pointer al file delle posizioni
     FILE *fm = fileOpenRead("misure.csv");  // pointer al file delle misure
     // FILE *fo = fileOpenWrite("out.csv"); // pointer al file di output
-
+    
     // Ignora prima riga dei file di input
     csvIgnoreLine(fp);
     csvIgnoreLine(fm);
 
-    while (FILE_OK == csvGetEntries(fp, &p_time, "%lu", IGNORE, NULL, &p_lat, "%f", &p_lon, "%f"))
+    while (FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon) && FILE_OK == leggi_mis(fm, &m_time, &no2, &voc, &pm10, &pm25))
     {
-        csvGetEntries(fm, &m_time, "%lu", IGNORE, NULL, &no2, "%f", &voc, "%f", &pm10, "%f", &pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
         printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, no2, voc, pm10, pm25);
     }
+}
+
+int leggi_pos(FILE *file, unsigned long int *time, float *lat, float *lon)
+{
+    return csvGetEntries(file, time, "%lu", IGNORE, NULL, lat, "%f", lon, "%f");
+}
+
+int leggi_mis(FILE *file, unsigned long int *time, int *no2, int *voc, int *pm10, int *pm25)
+{
+    return csvGetEntries(file, time, "%lu", IGNORE, NULL, no2, "%f", voc, "%f", pm10, "%f", pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
 }
 
 float get_media(int arr_mis[], int i)
