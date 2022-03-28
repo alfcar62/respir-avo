@@ -67,7 +67,7 @@ POSIX:  make run
 #include <stdint.h>
 #include <filelib.h>
 #include <csvlib.h>
-#include <assert.h>
+#include <assertlib.h>
 
 
 // Massimi file
@@ -110,8 +110,9 @@ int     cnt_mis  =  0;
 
 int main(int argc, char const *argv[])
 {
-    assert(4 == argc);  // Controlla che siano passati 3 argomenti da riga di comando
-    
+    // Si assicura che siano passati tutti i tre argomenti richiesti
+    massert(4 == argc, -1, "Numero insufficiente di argomenti: Richiesti 3, dati %d", argc - 1);
+
     // Nomi file
     const char *fp_name = argv[1],   // Nome file posizioni
                *fm_name = argv[2],   // Nome file misure
