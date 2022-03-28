@@ -50,13 +50,16 @@ Arguments are passed as follows:
 int vcsvGetEntries(FILE *__csvf, va_list __args)
 {
     char  _buffer[MAX_STR_LEN];     // Line buffer
-    char  _curchr;                  // The current character
     char *_buffptr = _buffer;       // Base pointer of the buffer
 
-    // Reads characters from the file
-    while ((_curchr = (*_buffptr = fgetc(__csvf))))
+    // Until the EOF is reached
+    while (!feof(__csvf))
     {
-        if (__IsSeparator__(*_buffptr)) // If a separator is reached
+        // Reads the next character, saves it into a buffer and makes a copy in _curchr
+        *_buffptr    = fgetc(__csvf);
+        char _curchr = *_buffptr;
+
+        if (__IsSeparator__(_curchr)) // If a separator is reached
         {
             // Takes the pointer to the destination variable and a format string
             void *_var = va_arg(__args, void*);
@@ -81,7 +84,7 @@ int vcsvGetEntries(FILE *__csvf, va_list __args)
         _buffptr++;
     }
 
-    return (_curchr) ? FILE_OK : EOF;
+    return feof(__csvf);
 }
 
 /***********************************************************
