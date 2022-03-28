@@ -22,16 +22,31 @@ limitations under the License.
 #include <stdio.h>
 
 
+/***************************************************************************
+DESCRIPTION:
+Custom assert procedure which exits the program if a condition is not met.
+The procedure also prints an error message and exits with a given exit code.
+
+Arguments are passed as follows:
+    - Condition
+    - Exit code
+    - Error message (printf format string)
+    - Error message format values
+/***************************************************************************/
 void massert(bool __condition, int __ecode, const char *__msg, ...)
 {
+    // Returns if the condition is met
     if (__condition) return;
 
+    // Creates variable argument list
     va_list _arguments;
     va_start(_arguments, __msg);
 
+    // Prints error message
     vprintf(__msg, _arguments);
     printf("\n");
 
+    // Exits the program
     va_end(_arguments);
     exit(__ecode);
 }
