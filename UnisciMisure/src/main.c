@@ -67,6 +67,7 @@ POSIX:  make run
 #include <stdint.h>
 #include <filelib.h>
 #include <csvlib.h>
+#include <assert.h>
 
 
 // Massimi file
@@ -94,11 +95,8 @@ POSIX:  make run
 /*****************************************************************************************************************************************
 RET TYPE    NAME            ARGUMENTS
 /*****************************************************************************************************************************************/
-int         leggi_pos       (FILE *fp, unsigned long int *time, float *lat, float *lon);
-int         leggi_mis       (FILE *fp, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25);
-int         scrivi_out      (FILE *fp, unsigned long int time, double lat, double lon, int mis, float no2, float voc, float pm10, float pm25);
 int         check_limite    (int tipo_mis, float misura, char superato[], int *perc_sup);
-void        menu            (char p[], char m[], char o[], int *scelta, char nome_mis[]);
+void        menu            (int *scelta, char nome_mis[]);
 float       get_media       (int arr_mis[], int i);
 
 /*************************
@@ -108,255 +106,50 @@ int     cnt_pos  =  0;
 int     cnt_mis  =  0;
 
 
-int main()
+int main(int argc, char const **argv)
 {
-    int arr_mis[100];
-    int i;
-    char fp_name[20], fm_name[20], fo_name[20];
-    int ret;
-    unsigned long int p_time, m_time; // timestamp
-    float p_lat, p_lon;               // coordinate
-    float voc, no2, pm25, pm10;       // misurazioni
-    float mis_medio;
-    char str[MAX_STR_LEN];
-    long int difftime;
+    // assert(3 == argc);  // Controlla che siano passati 3 argomenti da riga di comando
+
+    // Nomi file
+    const char *fp_name = argv[0],   // Nome file posizioni
+               *fm_name = argv[1],   // Nome file misure
+               *fo_name = argv[2];   // Nome file di output
+
+    // Timestamp
+    unsigned long int p_time, // Timestamp posizioni
+                      m_time; // Timestamp misure
+    
+    // Posizioni
+    float p_lat,    // Latitudine
+          p_lon;    // Longitudine
+    
+    // Misure
+    float no2,
+          voc,
+          pm10,
+          pm25;
+    
+    // Scelta
     int misura;
     char mis_name[10];
-
-    menu(fp_name, fm_name, fo_name, &misura, mis_name);
 
     printf("Inizio elaborazione\n");
     printf("\n........................\n");
 
-    FILE *fp = fileOpenRead(fp_name);  // pointer al file delle posizioni
-    FILE *fm = fileOpenRead(fm_name);  // pointer al file delle misure
-    FILE *fo = fileOpenWrite(fo_name); // pointer al file di output
+    // Apre file stream verso i file richiesti
+    FILE *fp = fileOpenRead("posizioni.csv");  // pointer al file delle posizioni
+    FILE *fm = fileOpenRead("misure.csv");  // pointer al file delle misure
+    // FILE *fo = fileOpenWrite("out.csv"); // pointer al file di output
 
-    // Prima riga intestazione
-    fprintf(fo, "timestamp,latitude,longitude,%s,superato limite, percentuale sup", mis_name);
+    // Ignora prima riga dei file di input
+    csvIgnoreLine(fp);
+    csvIgnoreLine(fm);
 
-    ret = leggi_pos(fp, &p_time, &p_lat, &p_lon);
-    if (ret != OK)
+    while (FILE_OK == csvGetEntries(fp, &p_time, "%lu", IGNORE, NULL, &p_lat, "%f", &p_lon, "%f"))
     {
-        printf("\nErrore in leggi_pos() prima riga file posizioni)\n");
-        goto FINE;
+        csvGetEntries(fm, &m_time, "%lu", IGNORE, NULL, &no2, "%f", &voc, "%f", &pm10, "%f", &pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
+        printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, no2, voc, pm10, pm25);
     }
-
-    ret = leggi_mis(fm, &m_time, &no2, &voc, &pm10, &pm25);
-    if (ret != OK)
-    {
-        printf("\nErrore in leggi_mis() prima riga file misure\n");
-        goto FINE;
-    }
-
-    do
-    {
-        difftime = abs((int)p_time - (int)m_time);
-        
-        // mMno di 1 minuto di differenza
-        if (difftime < 60)
-        {
-            ret = scrivi_out(fo, p_time, p_lat, p_lon, misura, no2, voc, pm10, pm25);
-            if (ret != OK)
-            {
-                printf("\nErrore in scrivi_out()\n");
-                goto FINE;
-            }
-        }
-
-        if (p_time < m_time)
-        {
-            ret = leggi_pos(fp, &p_time, &p_lat, &p_lon);
-            if (ret != OK)
-            {
-                printf("\nErrore in leggi_pos() prima riga file posizioni)\n");
-                goto FINE;
-            }
-        }
-        else
-        {
-            ret = leggi_mis(fm, &m_time, &no2, &voc, &pm10, &pm25);
-            if (ret == EOF)
-            {
-                //        printf("\nEOF mis\n");
-                goto FINE;
-            }
-        }
-    } while (true); // do
-
-FINE:
-    fclose(fp);
-    fclose(fm);
-    fclose(fo);
-    printf("\nCreato file %s OK\n", fo_name);
-} // main
-
-/********************************************************
-DESCRIZIONE:
-Legge dal file posizioni.csv
-formato del file: timestamp, date, latitude, longitude
-********************************************************/
-int leggi_pos(FILE *fp, unsigned long int *time, float *lat, float *lon)
-{
-    char str1[MAX_STR_LEN];
-    char str2[MAX_STR_LEN];
-    int len;
-    int i1;      // indice array str1
-    int i2;      // indice array str2
-    int pos = 0;
-    int ret;
-
-    // printf("\nentro in leggi_pos()\n");
-    if (fgets(str1, MAX_STR_LEN, fp) == NULL) // lettura di una riga del file
-        return EOF;
-
-    len = strlen(str1);
-
-    // printf("\nletto str1 = '%s' (len=%d)\n",str1,len);
-    for (i1 = 0, i2 = 0; i1 < len; i1++, i2++)
-    {
-        if (str1[i1] == ',' || str1[i1] == '\n' || str1[i1] == '\0')
-        {
-            //       printf("\nprima di str2[i2] i2 = %d",i2);
-            str2[i2] = '\0';
-
-            pos++;
-            switch (pos)
-            {
-                case 1: // timestamp
-                    sscanf(str2, "%ld", time);
-                    break;
-
-                case 2: // date
-                    break;
-
-                case 3: // lat
-                    sscanf(str2, "%f", lat);
-                    break;
-
-                case 4: // lon
-                    sscanf(str2, "%f", lon);
-                    break;
-            }
-            i2 = (-1);
-        }
-        else if (str1[i1] != '\n')
-            str2[i2] = str1[i1];
-        if (str1[i1] == '\n' || str1[i1] == '\0')
-            str2[i2] = '\0';
-    }
-
-    cnt_pos++;
-    return OK;
-}
-
-/**********************************************
-DESCRIZIONE:
-leggi_mis() Legge una riga dal file misure.csv
-formato del file:
-   timestamp data  NO2 VOC pm 10 pm 2.5
-   + altro che non interessa
-
-eturn OK
-      ERR
-**********************************************/
-int leggi_mis(FILE *fp, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25)
-{
-    char str1[MAX_STR_LEN];
-    char str2[MAX_STR_LEN];
-    int len;
-    int i1; // indice array str1
-    int i2; // indice array str2
-    int pos = 0;
-    int ret;
-
-    if (fgets(str1, MAX_STR_LEN, fp) == NULL) // lettura di una riga del file
-        return EOF;
-
-    len = strlen(str1);
-    // printf("\nfile misure  str1 = %s\n",str1);
-    for (i1 = 0, i2 = 0; i1 < len; i1++, i2++)
-    {
-        if (str1[i1] == ',' || str1[i1] == '\n' || str1[i1] == '\0')
-        {
-            str2[i2] = '\0';
-            //      printf ("sottostringa letta n(str2): '%s'\n", str2);
-            pos++;
-            switch (pos)
-            {
-            case 1: // timestamp
-                sscanf(str2, "%ld", time);
-                break;
-
-            case 2: // data e ora
-                    // skip
-                break;
-
-            case 3: // NO2
-                sscanf(str2, "%f", no2);
-                break;
-
-            case 4: // VOC
-                sscanf(str2, "%f", voc);
-                break;
-
-            case 5: // PM10
-                sscanf(str2, "%f", pm10);
-                break;
-
-            case 6: // PM25
-                sscanf(str2, "%f", pm25);
-                break;
-            }
-            i2 = (-1);
-        }
-        else if (str1[i1] != '\n')
-            str2[i2] = str1[i1];
-        if (str1[i1] == '\n' || str1[i1] == '\0')
-        {
-            str2[i2] = '\0';
-            //          printf ("-----fine riga--------\n");
-        }
-    }
-    cnt_mis++;
-    // printf("\ncnt_mis = %d, letto mis time=%ld,no2=%f,voc=%f,pm10=%f,pm25=%f\n",
-    //            cnt_mis, *time, *no2, *voc, *pm10, *pm25);
-    return OK;
-}
-
-// scrive una riga sul file di output
-int scrivi_out(FILE *fp, unsigned long int time, double lat, double lon, int tipo_mis, float no2, float voc, float pm10, float pm25)
-{
-    float misura;
-    char superato_limite[10] = "NO";
-    int ret;
-    int perc_sup;
-
-    switch (tipo_mis)
-    {
-    case NO2:
-        misura = no2;
-        break;
-    case VOC:
-        misura = voc;
-        break;
-    case PM10:
-        misura = pm10;
-        break;
-    case PM25:
-        misura = pm25;
-        break;
-    default:
-        printf("\nmisura non prevista\n");
-        return ERR;
-        break;
-    }
-    ret = check_limite(tipo_mis, misura, superato_limite, &perc_sup);
-    if (ret == ERR)
-        return ERR;
-
-    fprintf(fp, "\n%ld,%f,%f,%f,%s %d", time, lat, lon, misura, superato_limite, perc_sup);
-    return OK;
 }
 
 float get_media(int arr_mis[], int i)
@@ -416,17 +209,9 @@ menu: vidualizza il menu delle scelte utente
       int *scelta : scelta dell'utente
       char nome_mis[]: misura da rilevare
 **************************************************/
-void menu(char p[], char m[], char o[], int *scelta, char nome_mis[])
+void menu(int *scelta, char nome_mis[])
 {
     int err = true;
-    printf("\nnome del file delle posizioni:");
-    scanf("%s", p);
-
-    printf("\nnome del file delle misure:");
-    scanf("%s", m);
-
-    printf("\nnome del file di output:");
-    scanf("%s", o);
 
     do
     {
