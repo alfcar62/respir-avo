@@ -19,7 +19,7 @@ limitations under the License.
 #include <assertlib.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <stdio.h>
+#include <iolib.h>
 
 
 /***************************************************************************
@@ -43,8 +43,7 @@ void massert(bool __condition, int __ecode, const char *__msg, ...)
     va_start(_arguments, __msg);
 
     // Prints error message
-    vprintf(__msg, _arguments);
-    printf("\n");
+    vprintln(__msg, _arguments);
 
     // Exits the program
     va_end(_arguments);

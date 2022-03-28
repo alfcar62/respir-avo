@@ -69,6 +69,7 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #include <csvlib.h>
 #include <assertlib.h>
 #include <siglib.h>
+#include <iolib.h>
 
 // Crea costante con comando di clear
 #ifdef _WIN32
@@ -141,8 +142,8 @@ int main(int argc, char const *argv[])
     // Chiede misura da mettere nel file di output
     menu(&misura, mis_name);
 
-    printf("Inizio elaborazione");
-    printf("\n........................\n");
+    println("Inizio elaborazione");
+    println("........................");
 
     // Apre file stream verso i file richiesti
     FILE *fp = fileOpenRead(fp_name);  // pointer al file delle posizioni
@@ -257,12 +258,12 @@ void menu(int *scelta, char nome_mis[])
     do
     {
         err = false;
-        printf("Selezionare misura:");
-        printf("\n1: NO2");
-        printf("\n2: VOC");
-        printf("\n3: PM10");
-        printf("\n4: PM2.5");
-        printf("\nscelta: ");
+        println("Selezionare misura:");
+        println("1: NO2");
+        println("2: VOC");
+        println("3: PM10");
+        println("4: PM2.5");
+        println("scelta: ");
         scanf("%d", scelta);
         
         switch (*scelta)
@@ -274,7 +275,7 @@ void menu(int *scelta, char nome_mis[])
 
             default:
                 err = true;
-                printf("ERRORE: Opzione %d non valida.\n", *scelta);
+                println("ERRORE: Opzione %d non valida.", *scelta);
                 break;
         }
     } while (err);
