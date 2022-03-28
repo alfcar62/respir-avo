@@ -124,11 +124,14 @@ int main(int argc, char const *argv[])
     float p_lat,    // Latitudine
           p_lon;    // Longitudine
     
+    // Array misure
+    float misure[5];
+
     // Misure
-    float no2,      // Diossido d'azzoto
-          voc,      // Composti organici volatili
-          pm10,     // PM10
-          pm25;     // PM2.5
+    float *no2  = &misure[NO2],      // Diossido d'azzoto
+          *voc  = &misure[VOC],      // Composti organici volatili
+          *pm10 = &misure[PM10],     // PM10
+          *pm25 = &misure[PM25];     // PM2.5
     
     // Scelta
     int   misura;
@@ -149,9 +152,9 @@ int main(int argc, char const *argv[])
     csvIgnoreLine(fp);
     csvIgnoreLine(fm);
 
-    while (FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon) && FILE_OK == leggi_mis(fm, &m_time, &no2, &voc, &pm10, &pm25))
+    while (FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon) && FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25))
     {
-        printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, no2, voc, pm10, pm25);
+        printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, *no2, *voc, *pm10, *pm25);
     }
 }
 
