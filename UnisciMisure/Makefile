@@ -53,7 +53,7 @@ link:
 	$(CXX) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(OBJS) $(LFLAGS)
 
 run:
-	$(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(pf) $(mf) $(of)
+	$(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(fp) $(fm) $(fo)
 
 setup:
 	@ mkdir $(BINDIR)
