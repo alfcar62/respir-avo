@@ -16,9 +16,9 @@ limitations under the License.
 ***************************************************************************/
 
 
-#include <stdio.h>
+#include <assertlib.h>
 #include <filelib.h>
-#include <assert.h>
+#include <stdio.h>
 
 #define READ_MODE "r"       // Modalità di lettura
 #define WRITE_MODE "w+"     // Modalità di scrittura
@@ -35,7 +35,7 @@ The assertion dumps the core if the file operation returns NULL
 static FILE* __OpenFileStream__(const char* __path, const char* __mode)
 {
     FILE* _file = fopen(__path, __mode);
-    assert(_file != FILE_ERROR);
+    massert(_file != NULL, -2, "Impossibile aprire file '%s' in modalita' '%s'", __path, __mode);
 
     return _file;
 }
