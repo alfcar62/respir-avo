@@ -180,16 +180,61 @@ int main(int argc, char const *argv[])
     fclose(fo);
 }
 
+/***************************************************************************
+DESCRIZIONE:
+Legge i valori timestamp, latitudine e longitudine dal file delle posizioni.
+
+PARAMETRI:
+    - Puntatore a FILE CSV
+    - Puntatore a `unsigned long int` "time"
+    - Puntatore a `float` "lat"
+    - Puntatore a `float` "lon"
+
+RETURN:
+    - FILE_OK (0) se l'operazione è stata conclusa con successo
+    - Un valore positivo se è stato raggiunto EOF
+***************************************************************************/
 int leggi_pos(FILE *file, unsigned long int *time, float *lat, float *lon)
 {
     return csvGetEntries(file, time, "%lu", IGNORE, NULL, lat, "%f", lon, "%f");
 }
 
+/***************************************************************************
+DESCRIZIONE:
+Legge i valori timestamp, NO2, VOC, PM10 e PM2.5 dal file delle misure.
+
+PARAMETRI:
+    - puntatore a FILE CSV
+    - Puntatore a `unsigned long int` "time"
+    - Puntatore a `float` "no2"
+    - Puntatore a `float` "voc"
+    - Puntatore a `float` "pm10"
+    - Puntatore a `float` "pm25"
+
+RETURN:
+    - FILE_OK (0) se l'operazione è stata conclusa con successo
+    - Un valore positivo se è stato raggiunto EOF
+***************************************************************************/
 int leggi_mis(FILE *file, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25)
 {
     return csvGetEntries(file, time, "%lu", IGNORE, NULL, no2, "%f", voc, "%f", pm10, "%f", pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
 }
 
+/******************************************************************************
+DESCRIZIONE:
+Scrive i valori timestamp, latitudine, longitudine e misura sul file di output.
+
+PARAMETRI:
+    - Puntatore a FILE CSV
+    - unsigned long int "time"
+    - float "lat"
+    - float "lon"
+    - float "mis"
+
+RETURN:
+    - Un valore positivo se l'operazione è stata conclusa con successo
+    - Altrimenti 0
+******************************************************************************/
 int scrivi_out(FILE *file, unsigned long int time, float lat, float lon, float mis)
 {
     // NOTA: Codice temporaneo, manca ancora implementazione per csvPutEntries() in CSVLib
@@ -197,12 +242,13 @@ int scrivi_out(FILE *file, unsigned long int time, float lat, float lon, float m
 }
 
 /**************************************************
-menu: vidualizza il menu delle scelte utente
-@params: char p[]: nome del file delle posizioni
-      char m[]: nome del file delle misure
-      char o[]: nome del file di output
-      int *scelta : scelta dell'utente
-      char nome_mis[]: misura da rilevare
+DESCRIZIONE:
+Visualizza un menu' che permette di sceglere la
+misura che si vuole unire.
+
+PARAMETRI:
+    - Puntatore ad `int` "scelta"
+    - Stringa "nome_mis"
 **************************************************/
 void menu(int *scelta, char nome_mis[])
 {
