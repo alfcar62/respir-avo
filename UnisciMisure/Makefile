@@ -17,7 +17,7 @@
 CXX = gcc
 
 INCDIR  = include
-CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf -I "src"
+CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf -I "src/intf"
 LFLAGS  = -lm
 
 SRCDIR     = src
@@ -58,3 +58,4 @@ run:
 setup:
 	@ mkdir $(BINDIR)
 	@ mkdir $(OBJDIR)
+	@ mkdir $(OBJDIR)/impl
