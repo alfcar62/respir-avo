@@ -108,14 +108,14 @@ int     cnt_pos  =  0;
 int     cnt_mis  =  0;
 
 
-int main(int argc, char const **argv)
+int main(int argc, char const *argv[])
 {
-    // assert(3 == argc);  // Controlla che siano passati 3 argomenti da riga di comando
-
+    assert(4 == argc);  // Controlla che siano passati 3 argomenti da riga di comando
+    
     // Nomi file
-    const char *fp_name = argv[0],   // Nome file posizioni
-               *fm_name = argv[1],   // Nome file misure
-               *fo_name = argv[2];   // Nome file di output
+    const char *fp_name = argv[1],   // Nome file posizioni
+               *fm_name = argv[2],   // Nome file misure
+               *fo_name = argv[3];   // Nome file di output
 
     // Timestamp
     unsigned long int p_time, // Timestamp posizioni
@@ -139,9 +139,9 @@ int main(int argc, char const **argv)
     printf("\n........................\n");
 
     // Apre file stream verso i file richiesti
-    FILE *fp = fileOpenRead("posizioni.csv");  // pointer al file delle posizioni
-    FILE *fm = fileOpenRead("misure.csv");  // pointer al file delle misure
-    // FILE *fo = fileOpenWrite("out.csv"); // pointer al file di output
+    FILE *fp = fileOpenRead(fp_name);  // pointer al file delle posizioni
+    FILE *fm = fileOpenRead(fm_name);  // pointer al file delle misure
+    FILE *fo = fileOpenWrite(fo_name); // pointer al file di output
     
     // Ignora prima riga dei file di input
     csvIgnoreLine(fp);
