@@ -124,7 +124,7 @@ void menu(int *scelta, char nome_mis[])
         
         // Input utente
         printf("scelta: ");
-        scanf("%d", scelta);
+        (void)scanf("%d", scelta);  // Cast a void utilizzato per annullare valore ritornato
         
         // Valutazione inpu
         switch (*scelta)
