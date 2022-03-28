@@ -119,8 +119,9 @@ DESCRIPTION:
 Reads an entire line and discards it.
 This is used for CSV Headers which may not be needed.
 ****************************************************/
-void csvIgnoreLine(FILE *__csvf)
+int csvIgnoreLine(FILE *__csvf)
 {
     // Reads from the file stream until a new line is reached
-    while (fgetc(__csvf) != NEW_LINE);
+    while (fgetc(__csvf) != NEW_LINE && !feof(__csvf));
+    return feof(__csvf);
 }
