@@ -98,12 +98,49 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #define MAX_SPREAD 60
 
 
-/*******************************************************************************************************************
-RET TYPE    NAME            ARGUMENTS
-*******************************************************************************************************************/
+/**************************************************
+DESCRIZIONE:
+Visualizza un menu' che permette di sceglere la
+misura che si vuole unire.
 
-void        menu            (int *scelta, char nome_mis[]);
+PARAMETRI:
+    - Puntatore ad `int` "scelta"
+    - Stringa "nome_mis"
+**************************************************/
+void menu(int *scelta, char nome_mis[])
+{
+    bool err = true;
 
+    do
+    {
+        err = false;
+
+        // Stampa opzioni
+        println("Selezionare misura:");
+        println("1: NO2");
+        println("2: VOC");
+        println("3: PM10");
+        println("4: PM2.5");
+        
+        // Input utente
+        printf("scelta: ");
+        scanf("%d", scelta);
+        
+        // Valutazione inpu
+        switch (*scelta)
+        {
+            case NO2  : strcpy(nome_mis, "NO2 (ppb)");    break;
+            case VOC  : strcpy(nome_mis, "VOC (ppb)");    break;
+            case PM10 : strcpy(nome_mis, "PM10 (ug/m3)"); break;
+            case PM25 : strcpy(nome_mis, "PM25 (ug/m3)"); break;
+
+            default:
+                err = true;
+                println("ERRORE: Opzione %d non valida.", *scelta);
+                break;
+        }
+    } while (err);
+}
 
 int main(int argc, char const *argv[])
 {
@@ -182,49 +219,4 @@ int main(int argc, char const *argv[])
     fclose(fp);
     fclose(fm);
     fclose(fo);
-}
-
-
-/**************************************************
-DESCRIZIONE:
-Visualizza un menu' che permette di sceglere la
-misura che si vuole unire.
-
-PARAMETRI:
-    - Puntatore ad `int` "scelta"
-    - Stringa "nome_mis"
-**************************************************/
-void menu(int *scelta, char nome_mis[])
-{
-    bool err = true;
-
-    do
-    {
-        err = false;
-
-        // Stampa opzioni
-        println("Selezionare misura:");
-        println("1: NO2");
-        println("2: VOC");
-        println("3: PM10");
-        println("4: PM2.5");
-        
-        // Input utente
-        printf("scelta: ");
-        scanf("%d", scelta);
-        
-        // Valutazione inpu
-        switch (*scelta)
-        {
-            case NO2  : strcpy(nome_mis, "NO2 (ppb)");    break;
-            case VOC  : strcpy(nome_mis, "VOC (ppb)");    break;
-            case PM10 : strcpy(nome_mis, "PM10 (ug/m3)"); break;
-            case PM25 : strcpy(nome_mis, "PM25 (ug/m3)"); break;
-
-            default:
-                err = true;
-                println("ERRORE: Opzione %d non valida.", *scelta);
-                break;
-        }
-    } while (err);
 }
