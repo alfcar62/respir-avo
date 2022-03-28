@@ -30,5 +30,6 @@ limitations under the License.
     int       vcsvGetEntries    (FILE *__csvf, va_list __args);
     int       csvGetEntries     (FILE *__csvf, ...);
     int       csvIgnoreLine     (FILE *__csvf);
+    void      csvPutHeader      (FILE *__csvf, int __cols, ...);
 
 #endif // CSVLIB_H

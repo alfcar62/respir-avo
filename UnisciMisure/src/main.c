@@ -154,6 +154,9 @@ int main(int argc, char const *argv[])
     csvIgnoreLine(fp);
     csvIgnoreLine(fm);
 
+    // Stampa intestazione tabella CSV
+    csvPutHeader(fo, 4, "timestamp", "latitudine", "longitudine", mis_name);
+
     // Determina se è possibile continaure o meno
     bool continuare = true;
 
@@ -258,14 +261,19 @@ void menu(int *scelta, char nome_mis[])
     do
     {
         err = false;
+
+        // Stampa opzioni
         println("Selezionare misura:");
         println("1: NO2");
         println("2: VOC");
         println("3: PM10");
         println("4: PM2.5");
-        println("scelta: ");
+        
+        // Input utente
+        printf("scelta: ");
         scanf("%d", scelta);
         
+        // Valutazione inpu
         switch (*scelta)
         {
             case NO2  : strcpy(nome_mis, "NO2 (ppb)");    break;

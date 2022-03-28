@@ -125,3 +125,36 @@ int csvIgnoreLine(FILE *__csvf)
     while (fgetc(__csvf) != NEW_LINE && !feof(__csvf));
     return feof(__csvf);
 }
+
+/********************************
+DESCRIPTION:
+Prints the header of a CSV Table
+
+Arguments are passed as follows:
+    - CSV File
+    - Number of columns
+    - Header for each column
+********************************/
+void csvPutHeader(FILE *__csvf, int __cols, ...)
+{
+    // Initializes the va_list
+    va_list _arguments;
+    va_start(_arguments, __cols);
+
+    // For every column
+    int _i;
+    for (_i = 0; _i < __cols; _i++)
+    {
+        // Get the header string from the va_list
+        char *_hdr = va_arg(_arguments, char*);
+
+        // Print the column's header
+        fprintf(__csvf, "%s", _hdr);
+
+        // Print separator
+        if (_i != __cols - 1) fprintf(__csvf, ",");
+    }
+
+    fprintf(__csvf, "\n");
+    va_end(_arguments);
+}
