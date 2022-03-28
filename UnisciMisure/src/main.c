@@ -92,6 +92,8 @@ POSIX:  make run
 #define MAX_PM10 10         // umg/m3
 #define MAX_PM25 10         // umg/m3
 
+#define MAX_SPREAD 60
+
 
 /************************************************************************************************************
 RET TYPE    NAME            ARGUMENTS
@@ -125,7 +127,7 @@ int main(int argc, char const *argv[])
           p_lon;    // Longitudine
     
     // Array misure
-    float misure[5];
+    float misure[5] = { 0, 0, 0, 0, 0 };
 
     // Misure
     float *no2  = &misure[NO2],      // Diossido d'azzoto
@@ -135,7 +137,7 @@ int main(int argc, char const *argv[])
     
     // Scelta
     int   misura;
-    char mis_name[10];
+    char  mis_name[10];
 
     // Chiede misura da mettere nel file di output
     menu(&misura, mis_name);
@@ -152,10 +154,31 @@ int main(int argc, char const *argv[])
     csvIgnoreLine(fp);
     csvIgnoreLine(fm);
 
-    while (FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon) && FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25))
+    // Determina se è possibile continaure o meno
+    bool continuare = true;
+
+    // Fino a quando non si raggiunge la fine di uno dei due file di input
+    while (continuare)
     {
-        printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, *no2, *voc, *pm10, *pm25);
+        if (p_time < m_time)
+            continuare = FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon);
+        else
+            continuare = FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25);
+        
+        // Differenza tra i timestamp di misure e posizioni
+        unsigned long diff = labs(p_time - m_time);
+        
+        // Se la differenza tra i due timestamp è nella forbice accettabile
+        if (diff < MAX_SPREAD)
+        {
+            printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, *no2, *voc, *pm10, *pm25);
+            // massert(true, -4, "Errore nella scrittura del file di output '%s'", fo_name);
+        }
     }
+
+    fclose(fp);
+    fclose(fm);
+    fclose(fo);
 }
 
 int leggi_pos(FILE *file, unsigned long int *time, float *lat, float *lon)
