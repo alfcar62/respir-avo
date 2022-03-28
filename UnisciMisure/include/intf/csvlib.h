@@ -20,12 +20,14 @@ limitations under the License.
 #define CSVLIB_H
 
     #include <filelib.h>
+    #include <stdarg.h>
     #include <stdbool.h>
 
     #define MAX_STR_LEN 200     // Maximum string length
     #define IGNORE      NULL    // Inogres a column
 
 
+    int       vcsvGetEntries    (FILE *__csvf, va_list __args);
     int       csvGetEntries     (FILE *__csvf, ...);
     void      csvIgnoreLine     (FILE *__csvf);
 

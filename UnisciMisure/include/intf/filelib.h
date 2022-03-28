@@ -24,10 +24,10 @@ limitations under the License.
 
     // Codici di errore e successo
     #define FILE_ERROR NULL     // NullPointer, utilizzata per verificare se si è verificato un errore nell'apertura di una file stream
-    #define FILE_OK 0           // Valore di successo restituito da funzioni/procedure
+    #define FILE_OK    0        // Valore di successo restituito da funzioni/procedure
 
 
-    FILE* fileOpenRead(const char* __path);
-    FILE* fileOpenWrite(const char* __path);
+    FILE*   fileOpenRead    (const char* __path);
+    FILE*   fileOpenWrite   (const char* __path);
 
 #endif // FILELIB_H

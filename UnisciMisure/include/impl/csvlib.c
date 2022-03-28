@@ -40,25 +40,15 @@ static bool __IsSeparator__(char __val)
 
 /***********************************************************
 DESCRIPTION:
-Reads all columns from the current line in the CSV File.
-It uses a va_list to get an unspecified number of arguments.
+va_list interface for csvGetEntries
 
 Arguments are passed as follows: 
     - CSV File
-    - Pointer to destination variable for first column
-    - Format string for first column
-    - Pointer to destination variable for nth column
-    - Format string for nth column
-
-To ignore a column, just give IGNORE or NULL
-as both variable pointer and format string. 
+    - va_list containing arguments in the same order as
+      csvGetEntries
 ***********************************************************/
-int csvGetEntries(FILE *__csvf, ...)
+int vcsvGetEntries(FILE *__csvf, va_list __args)
 {
-    // Variable Argument initialization
-    va_list _arguments;
-    va_start(_arguments, __csvf);
-
     char  _buffer[MAX_STR_LEN];     // Line buffer
     char  _curchr;                  // The current character
     char *_buffptr = _buffer;       // Base pointer of the buffer
@@ -69,8 +59,8 @@ int csvGetEntries(FILE *__csvf, ...)
         if (__IsSeparator__(*_buffptr)) // If a separator is reached
         {
             // Takes the pointer to the destination variable and a format string
-            void *_var = va_arg(_arguments, void*);
-            char *_fmt = va_arg(_arguments, char*);
+            void *_var = va_arg(__args, void*);
+            char *_fmt = va_arg(__args, char*);
 
             // Adds the NULL terminator to the buffer for safety
             *_buffptr = END;
@@ -91,8 +81,34 @@ int csvGetEntries(FILE *__csvf, ...)
         _buffptr++;
     }
 
-    va_end(_arguments);
     return (_curchr) ? FILE_OK : EOF;
+}
+
+/***********************************************************
+DESCRIPTION:
+Reads all columns from the current line in the CSV File.
+It uses a va_list to get an unspecified number of arguments.
+
+Arguments are passed as follows: 
+    - CSV File
+    - Pointer to destination variable for first column
+    - Format string for first column
+    - Pointer to destination variable for nth column
+    - Format string for nth column
+
+To ignore a column, just give IGNORE or NULL
+as both variable pointer and format string. 
+***********************************************************/
+int csvGetEntries(FILE *__csvf, ...)
+{
+    // Variable Argument initialization
+    va_list _arguments;
+    va_start(_arguments, __csvf);
+
+    int _ret = vcsvGetEntries(__csvf, _arguments);
+
+    va_end(_arguments);
+    return _ret;
 }
 
 /****************************************************
