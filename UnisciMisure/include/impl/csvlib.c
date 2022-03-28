@@ -20,18 +20,39 @@ limitations under the License.
 #include <stdarg.h>
 #include <stdio.h>
 
-#define NEW_LINE '\n'
-#define END      0
-#define COMMA    ','
+#define NEW_LINE '\n'   // New line character
+#define END        0    // String terminator
+#define COMMA    ','    // CSV Separator
 
 
+/************************************************
+DESCRIPTION:
+Static bool function - Used only inside this file
+
+Returns true if the specified char is a
+valid CSV Separator.
+************************************************/
 static bool __IsSeparator__(char __val)
 {
     return __val == COMMA ||
            __val == NEW_LINE;
 }
 
+/***********************************************************
+DESCRIPTION:
+Reads all columns from the current line in the CSV File.
+It uses a va_list to get an unspecified number of arguments.
 
+Arguments are passed as follows: 
+    - CSV File
+    - Pointer to destination variable for first column
+    - Format string for first column
+    - Pointer to destination variable for nth column
+    - Format string for nth column
+
+To ignore a column, just give IGNORE or NULL
+as both variable pointer and format string. 
+***********************************************************/
 int csvGetEntries(FILE *__csvf, ...)
 {
     // Variable Argument initialization
@@ -74,6 +95,11 @@ int csvGetEntries(FILE *__csvf, ...)
     return (_curchr) ? FILE_OK : EOF;
 }
 
+/****************************************************
+DESCRIPTION:
+Reads an entire line and discards it.
+This is used for CSV Headers which may not be needed.
+****************************************************/
 void csvIgnoreLine(FILE *__csvf)
 {
     // Reads from the file stream until a new line is reached
