@@ -205,7 +205,7 @@ int main(int argc, char const *argv[])
                                          FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25);
         
         // Differenza tra i timestamp di misure e posizioni
-        unsigned long diff = labs(p_time - m_time);
+        int diff = abs((int)p_time - (int)m_time);
         
         // Se la differenza tra i due timestamp è nella forbice accettabile
         if (diff < MAX_SPREAD)

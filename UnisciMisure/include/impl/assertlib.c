@@ -32,7 +32,7 @@ Arguments are passed as follows:
     - Exit code
     - Error message (printf format string)
     - Error message format values
-/***************************************************************************/
+****************************************************************************/
 void massert(bool __condition, int __ecode, const char *__msg, ...)
 {
     // Returns if the condition is met
