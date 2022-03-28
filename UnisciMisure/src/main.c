@@ -113,6 +113,7 @@ void menu(int *scelta, char nome_mis[])
 
     do
     {
+        CLEAR();
         err = false;
 
         // Stampa opzioni
