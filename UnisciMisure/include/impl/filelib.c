@@ -20,10 +20,18 @@ limitations under the License.
 #include <filelib.h>
 #include <assert.h>
 
-#define READ_MODE "r"
-#define WRITE_MODE "w+"
+#define READ_MODE "r"       // Modalità di lettura
+#define WRITE_MODE "w+"     // Modalità di scrittura
 
 
+/**************************************************************
+DESCRIPTION:
+Static FILE* function - Used only inside this file
+
+Returns a pointer to a file if possible.
+It also checks that everything went smoothly and.
+The assertion dumps the core if the file operation returns NULL
+**************************************************************/
 static FILE* __OpenFileStream__(const char* __path, const char* __mode)
 {
     FILE* _file = fopen(__path, __mode);
@@ -32,11 +40,19 @@ static FILE* __OpenFileStream__(const char* __path, const char* __mode)
     return _file;
 }
 
+/*************************
+DESCRIPTION:
+Opens a file in read mode.
+*************************/
 FILE* fileOpenRead(const char* __path)
 {
     return __OpenFileStream__(__path, READ_MODE);
 }
 
+/*************************
+DESCRIPTION:
+Opens a file in write mode.
+*************************/
 FILE* fileOpenWrite(const char* __path)
 {
     return __OpenFileStream__(__path, WRITE_MODE);
