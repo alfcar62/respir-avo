@@ -95,14 +95,13 @@ POSIX:  make run
 #define MAX_SPREAD 60
 
 
-/************************************************************************************************************
+/*******************************************************************************************************************
 RET TYPE    NAME            ARGUMENTS
-************************************************************************************************************/
+*******************************************************************************************************************/
 int         leggi_pos       (FILE *file, unsigned long int *time, float *lat, float *lon);
 int         leggi_mis       (FILE *file, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25);
-int         check_limite    (int tipo_mis, float misura, char superato[], int *perc_sup);
+int         scrivi_out      (FILE *file, unsigned long int time, float lat, float lon, float mis);
 void        menu            (int *scelta, char nome_mis[]);
-float       get_media       (int arr_mis[], int i);
 
 
 int main(int argc, char const *argv[])
@@ -127,7 +126,7 @@ int main(int argc, char const *argv[])
           p_lon;    // Longitudine
     
     // Array misure
-    float misure[5] = { 0, 0, 0, 0, 0 };
+    float misure[5];
 
     // Misure
     float *no2  = &misure[NO2],      // Diossido d'azzoto
@@ -160,22 +159,22 @@ int main(int argc, char const *argv[])
     // Fino a quando non si raggiunge la fine di uno dei due file di input
     while (continuare)
     {
-        if (p_time < m_time)
-            continuare = FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon);
-        else
-            continuare = FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25);
+        // Se p_time è minore di m_time, si legge dal file posizioni, altrimenti dal file misure
+        continuare = (p_time < m_time) ? FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon) :
+                                         FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25);
         
         // Differenza tra i timestamp di misure e posizioni
         unsigned long diff = labs(p_time - m_time);
         
         // Se la differenza tra i due timestamp è nella forbice accettabile
         if (diff < MAX_SPREAD)
-        {
-            printf("%lu %f %f %f %f %f %f\n", p_time, p_lat, p_lon, *no2, *voc, *pm10, *pm25);
-            // massert(true, -4, "Errore nella scrittura del file di output '%s'", fo_name);
-        }
+            massert(
+                scrivi_out(fo, p_time, p_lat, p_lon, misure[misura]),           // Condizione
+                -4, "Errore nella scrittura del file di output '%s'", fo_name   // Se la condizione non è verificata
+            );
     }
 
+    // Chiusura delle stream su tutti i file
     fclose(fp);
     fclose(fm);
     fclose(fo);
@@ -191,53 +190,10 @@ int leggi_mis(FILE *file, unsigned long int *time, float *no2, float *voc, float
     return csvGetEntries(file, time, "%lu", IGNORE, NULL, no2, "%f", voc, "%f", pm10, "%f", pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
 }
 
-float get_media(int arr_mis[], int i)
+int scrivi_out(FILE *file, unsigned long int time, float lat, float lon, float mis)
 {
-    return 0;
-}
-
-int check_limite(int tipo_mis, float misura, char superato[], int *perc_sup)
-{
-    strcpy(superato, "NO");
-    
-    switch (tipo_mis)
-    {
-        case NO2:
-            if (misura > MAX_NO2)
-            {
-                strcpy(superato, "SI");
-                *perc_sup = roundf((100 * (misura - MAX_NO2) / MAX_NO2));
-                //  	       printf("\nMAX=%d,misura = %f,perc sup=%d",MAX_NO2,misura,*perc_sup);
-            }
-            break;
-        case VOC:
-            if (misura > MAX_VOC)
-            {
-                strcpy(superato, "SI");
-                *perc_sup = roundf((100 * (misura - MAX_VOC) / MAX_VOC));
-            }
-            break;
-        case PM10:
-            if (misura > MAX_PM10)
-            {
-                strcpy(superato, "SI");
-                *perc_sup = roundf((100 * (misura - MAX_PM10) / MAX_PM10));
-            }
-            break;
-        case PM25:
-            if (misura > MAX_PM25)
-            {
-                strcpy(superato, "SI");
-                *perc_sup = roundf((100 * (misura - MAX_PM25) / MAX_PM25));
-            }
-            break;
-        default:
-            printf("\nmisura non prevista\n");
-            return -1;
-            break;
-    }
-
-    return 0;
+    // NOTA: Codice temporaneo, manca ancora implementazione per csvPutEntries() in CSVLib
+    return fprintf(file, "%lu,%f,%f,%f\n", time, lat, lon, mis);
 }
 
 /**************************************************
@@ -255,7 +211,7 @@ void menu(int *scelta, char nome_mis[])
     do
     {
         err = false;
-        printf("\nquale misura vuoi elaborare:");
+        printf("Selezionare misura:");
         printf("\n1: NO2");
         printf("\n2: VOC");
         printf("\n3: PM10");
