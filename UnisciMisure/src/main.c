@@ -70,15 +70,15 @@ POSIX:  make run
 #include <assertlib.h>
 #include <siglib.h>
 
+// Crea costante con comando di clear
+#ifdef _WIN32
+    #define CLEARSTR "cls"
+#else
+    #define CLEARSTR "clear"
+#endif
 
-// Massimi file
-#define MAX_STR_LEN 200
-#define MAX_LINES   1000    // Massimo numero di linee
-
-// Codici di errore e successo
-#define FILE_ERROR NULL     // NullPointer, utilizzata per verificare se si è verificato un errore nell'apertura di una file stream
-#define ERR -1              // Valore di errore restituito dalle funzioni/procedure
-#define OK 0                // Valore di successo restituito da funzioni/procedure
+// Macro per screen clear
+#define CLEAR() system(CLEARSTR)
 
 // Scelte
 #define NO2 1               // Costante che rappresenta la scelta di NO2
@@ -93,20 +93,14 @@ POSIX:  make run
 #define MAX_PM25 10         // umg/m3
 
 
-/*****************************************************************************************************************************************
+/************************************************************************************************************
 RET TYPE    NAME            ARGUMENTS
-/*****************************************************************************************************************************************/
+************************************************************************************************************/
 int         leggi_pos       (FILE *file, unsigned long int *time, float *lat, float *lon);
-int         leggi_mis       (FILE *file, unsigned long int *time, int *no2, int *voc, int *pm10, int *pm25);
+int         leggi_mis       (FILE *file, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25);
 int         check_limite    (int tipo_mis, float misura, char superato[], int *perc_sup);
 void        menu            (int *scelta, char nome_mis[]);
 float       get_media       (int arr_mis[], int i);
-
-/*************************
-TYPE    NAME        VALUE
-*************************/
-int     cnt_pos  =  0;
-int     cnt_mis  =  0;
 
 
 int main(int argc, char const *argv[])
@@ -131,16 +125,19 @@ int main(int argc, char const *argv[])
           p_lon;    // Longitudine
     
     // Misure
-    float no2,
-          voc,
-          pm10,
-          pm25;
+    float no2,      // Diossido d'azzoto
+          voc,      // Composti organici volatili
+          pm10,     // PM10
+          pm25;     // PM2.5
     
     // Scelta
-    int misura;
+    int   misura;
     char mis_name[10];
 
-    printf("Inizio elaborazione\n");
+    // Chiede misura da mettere nel file di output
+    menu(&misura, mis_name);
+
+    printf("Inizio elaborazione");
     printf("\n........................\n");
 
     // Apre file stream verso i file richiesti
@@ -163,14 +160,14 @@ int leggi_pos(FILE *file, unsigned long int *time, float *lat, float *lon)
     return csvGetEntries(file, time, "%lu", IGNORE, NULL, lat, "%f", lon, "%f");
 }
 
-int leggi_mis(FILE *file, unsigned long int *time, int *no2, int *voc, int *pm10, int *pm25)
+int leggi_mis(FILE *file, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25)
 {
     return csvGetEntries(file, time, "%lu", IGNORE, NULL, no2, "%f", voc, "%f", pm10, "%f", pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
 }
 
 float get_media(int arr_mis[], int i)
 {
-    return OK;
+    return 0;
 }
 
 int check_limite(int tipo_mis, float misura, char superato[], int *perc_sup)
@@ -210,11 +207,11 @@ int check_limite(int tipo_mis, float misura, char superato[], int *perc_sup)
             break;
         default:
             printf("\nmisura non prevista\n");
-            return ERR;
+            return -1;
             break;
     }
 
-    return OK;
+    return 0;
 }
 
 /**************************************************
@@ -227,37 +224,30 @@ menu: vidualizza il menu delle scelte utente
 **************************************************/
 void menu(int *scelta, char nome_mis[])
 {
-    int err = true;
+    bool err = true;
 
     do
     {
         err = false;
         printf("\nquale misura vuoi elaborare:");
-        printf("\n1: NO2:");
-        printf("\n2: VOC:");
-        printf("\n3: PM10:");
-        printf("\n4: PM2.5:");
+        printf("\n1: NO2");
+        printf("\n2: VOC");
+        printf("\n3: PM10");
+        printf("\n4: PM2.5");
         printf("\nscelta: ");
         scanf("%d", scelta);
+        
         switch (*scelta)
         {
-        case NO2:
-            strcpy(nome_mis, "NO2 (ppb)");
-            break;
-        case VOC:
-            strcpy(nome_mis, "VOC (ppb)");
-            break;
-        case PM10:
-            strcpy(nome_mis, "PM10 (ug/m3)");
-            break;
-        case PM25:
-            strcpy(nome_mis, "PM25 (ug/m3)");
-            break;
+            case NO2  : strcpy(nome_mis, "NO2 (ppb)");    break;
+            case VOC  : strcpy(nome_mis, "VOC (ppb)");    break;
+            case PM10 : strcpy(nome_mis, "PM10 (ug/m3)"); break;
+            case PM25 : strcpy(nome_mis, "PM25 (ug/m3)"); break;
 
-        default:
-            err = true;
-            printf("\ripetere\n");
-            break;
+            default:
+                err = true;
+                printf("ERRORE: Opzione %d non valida.\n", *scelta);
+                break;
         }
     } while (err);
 }
