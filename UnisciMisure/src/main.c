@@ -196,7 +196,7 @@ int main(int argc, char const *argv[])
     csvPutHeader(fo, 4, "timestamp", "latitudine", "longitudine", mis_name);
 
     // Determina se è possibile continaure o meno
-    bool continuare = true;
+    volatile bool continuare = true;
 
     // Fino a quando non si raggiunge la fine di uno dei due file di input
     while (continuare)
