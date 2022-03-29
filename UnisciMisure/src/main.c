@@ -96,6 +96,18 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #define MAX_SPREAD 60
 
 
+void disegna_logo()
+{
+    CLEAR();
+
+    println("              _                ");
+    println("             (_)               ");
+    println("  _   _ _ __  _  ___ _____   __");
+    println(" | | | | '_ \\| |/ __/ __\\ \\ / /");
+    println(" | |_| | | | | | (__\\__ \\\\ V / ");
+    println("  \\__,_|_| |_|_|\\___|___/ \\_/  \n\n");
+}
+
 /**************************************************
 DESCRIZIONE:
 Visualizza un menu' che permette di sceglere la
@@ -109,14 +121,14 @@ void menu(int *__scelta, char __nome_mis[])
 {
     while (true)
     {
-        CLEAR();
+        disegna_logo();
 
         // Stampa opzioni
-        println("Selezionare misura:");
-        println("1: NO2");
-        println("2: VOC");
-        println("3: PM10");
-        println("4: PM2.5");
+        println("Selezionare misura");
+        println("1. NO2");
+        println("2. VOC");
+        println("3. PM10");
+        println("4. PM2.5");
         
         // Input utente
         printf("scelta: ");
