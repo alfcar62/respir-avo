@@ -22,8 +22,8 @@ limitations under the License.
     #include <stdio.h>
 
 
-    int         leggi_pos       (FILE *file, unsigned long int *time, float *lat, float *lon);
-    int         leggi_mis       (FILE *file, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25);
-    int         scrivi_out      (FILE *file, unsigned long int time, float lat, float lon, float mis);
+    int         leggi_pos       (FILE *__file, unsigned long int *__time, float *__lat, float *__lon);
+    int         leggi_mis       (FILE *__file, unsigned long int *__time, float *__no2, float *__voc, float *__pm10, float *__pm25);
+    int         scrivi_out      (FILE *__file, unsigned long int __time, float __lat, float __lon, float __mis);
 
 #endif // WRAPPERS_H

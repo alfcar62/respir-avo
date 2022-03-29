@@ -27,17 +27,17 @@ Legge i valori timestamp, latitudine e longitudine dal file delle posizioni.
 
 PARAMETRI:
     - Puntatore a FILE CSV
-    - Puntatore a `unsigned long int` "time"
-    - Puntatore a `float` "lat"
-    - Puntatore a `float` "lon"
+    - Puntatore a `unsigned long int` "__time"
+    - Puntatore a `float` "__lat"
+    - Puntatore a `float` "__lon"
 
 RETURN:
     - FILE_OK (0) se l'operazione è stata conclusa con successo
     - Un valore positivo se è stato raggiunto EOF
 ***************************************************************************/
-int leggi_pos(FILE *file, unsigned long int *time, float *lat, float *lon)
+int leggi_pos(FILE *__file, unsigned long int *__time, float *__lat, float *__lon)
 {
-    return csvGetEntries(file, time, "%lu", IGNORE, NULL, lat, "%f", lon, "%f");
+    return csvGetEntries(__file, __time, "%lu", IGNORE, NULL, __lat, "%f", __lon, "%f");
 }
 
 /***************************************************************************
@@ -46,19 +46,19 @@ Legge i valori timestamp, NO2, VOC, PM10 e PM2.5 dal file delle misure.
 
 PARAMETRI:
     - puntatore a FILE CSV
-    - Puntatore a `unsigned long int` "time"
-    - Puntatore a `float` "no2"
-    - Puntatore a `float` "voc"
-    - Puntatore a `float` "pm10"
-    - Puntatore a `float` "pm25"
+    - Puntatore a `unsigned long int` "__time"
+    - Puntatore a `float` "__no2"
+    - Puntatore a `float` "__voc"
+    - Puntatore a `float` "__pm10"
+    - Puntatore a `float` "__pm25"
 
 RETURN:
     - FILE_OK (0) se l'operazione è stata conclusa con successo
     - Un valore positivo se è stato raggiunto EOF
 ***************************************************************************/
-int leggi_mis(FILE *file, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25)
+int leggi_mis(FILE *__file, unsigned long int *__time, float *__no2, float *__voc, float *__pm10, float *__pm25)
 {
-    return csvGetEntries(file, time, "%lu", IGNORE, NULL, no2, "%f", voc, "%f", pm10, "%f", pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
+    return csvGetEntries(__file, __time, "%lu", IGNORE, NULL, __no2, "%f", __voc, "%f", __pm10, "%f", __pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
 }
 
 /******************************************************************************
@@ -67,17 +67,17 @@ Scrive i valori timestamp, latitudine, longitudine e misura sul file di output.
 
 PARAMETRI:
     - Puntatore a FILE CSV
-    - unsigned long int "time"
-    - float "lat"
-    - float "lon"
-    - float "mis"
+    - unsigned long int "__time"
+    - float "__lat"
+    - float "__lon"
+    - float "__mis"
 
 RETURN:
     - Un valore positivo se l'operazione è stata conclusa con successo
     - Altrimenti 0
 ******************************************************************************/
-int scrivi_out(FILE *file, unsigned long int time, float lat, float lon, float mis)
+int scrivi_out(FILE *__file, unsigned long int __time, float __lat, float __lon, float __mis)
 {
     // NOTA: Codice temporaneo, manca ancora implementazione per csvPutEntries() in CSVLib
-    return fprintf(file, "%lu,%f,%f,%f\n", time, lat, lon, mis);
+    return fprintf(__file, "%lu,%f,%f,%f\n", __time, __lat, __lon, __mis);
 }

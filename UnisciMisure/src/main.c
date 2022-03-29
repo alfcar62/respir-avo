@@ -102,10 +102,10 @@ Visualizza un menu' che permette di sceglere la
 misura che si vuole unire.
 
 PARAMETRI:
-    - Puntatore ad `int` "scelta"
-    - Stringa "nome_mis"
+    - Puntatore ad `int` "__scelta"
+    - Stringa "__nome_mis"
 **************************************************/
-void menu(int *scelta, char nome_mis[])
+void menu(int *__scelta, char __nome_mis[])
 {
     while (true)
     {
@@ -120,31 +120,31 @@ void menu(int *scelta, char nome_mis[])
         
         // Input utente
         printf("scelta: ");
-        (void)scanf("%d", scelta);  // Cast a void utilizzato per annullare valore ritornato
+        (void)scanf("%d", __scelta);  // Cast a void utilizzato per annullare valore ritornato
         
         // Valutazione inpu
-        switch (*scelta)
+        switch (*__scelta)
         {
-            case NO2  : strcpy(nome_mis, "NO2 (ppb)");    return;
-            case VOC  : strcpy(nome_mis, "VOC (ppb)");    return;
-            case PM10 : strcpy(nome_mis, "PM10 (ug/m3)"); return;
-            case PM25 : strcpy(nome_mis, "PM25 (ug/m3)"); return;
+            case NO2  : strcpy(__nome_mis, "NO2 (ppb)");    return;
+            case VOC  : strcpy(__nome_mis, "VOC (ppb)");    return;
+            case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)"); return;
+            case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)"); return;
         }
     }
 }
 
-int main(int argc, char const *argv[])
+int main(int __argc, char const *__argv[])
 {
     // Inizializza gestore segnali
     sigSetup();
 
     // Si assicura che siano passati tutti i tre argomenti richiesti
-    massert(4 == argc, -1, "Numero insufficiente di argomenti: Richiesti 3, dati %d", argc - 1);
+    massert(4 == __argc, -1, "Numero insufficiente di argomenti: Richiesti 3, dati %d", __argc - 1);
 
     // Nomi file
-    const char *fp_name = argv[1],   // Nome file posizioni
-               *fm_name = argv[2],   // Nome file misure
-               *fo_name = argv[3];   // Nome file di output
+    const char *fp_name = __argv[1],   // Nome file posizioni
+               *fm_name = __argv[2],   // Nome file misure
+               *fo_name = __argv[3];   // Nome file di output
 
     // Timestamp
     unsigned long int p_time, // Timestamp posizioni
