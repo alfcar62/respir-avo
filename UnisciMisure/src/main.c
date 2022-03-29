@@ -142,72 +142,72 @@ int main(int __argc, char const *__argv[])
     massert(4 == __argc, -1, "Numero insufficiente di argomenti: Richiesti 3, dati %d", __argc - 1);
 
     // Nomi file
-    const char *fp_name = __argv[1],   // Nome file posizioni
-               *fm_name = __argv[2],   // Nome file misure
-               *fo_name = __argv[3];   // Nome file di output
+    const char *_fp_name = __argv[1],   // Nome file posizioni
+               *_fm_name = __argv[2],   // Nome file misure
+               *_fo_name = __argv[3];   // Nome file di output
 
     // Timestamp
-    unsigned long int p_time, // Timestamp posizioni
-                      m_time; // Timestamp misure
+    unsigned long int _p_time, // Timestamp posizioni
+                      _m_time; // Timestamp misure
     
     // Posizioni
-    float p_lat,    // Latitudine
-          p_lon;    // Longitudine
+    float _p_lat,    // Latitudine
+          _p_lon;    // Longitudine
     
     // Array misure
-    float misure[5];
+    float _misure[5];
 
     // Misure
-    float *no2  = &misure[NO2],      // Diossido d'azzoto
-          *voc  = &misure[VOC],      // Composti organici volatili
-          *pm10 = &misure[PM10],     // PM10
-          *pm25 = &misure[PM25];     // PM2.5
+    float *_no2  = &_misure[NO2],      // Diossido d'azzoto
+          *_voc  = &_misure[VOC],      // Composti organici volatili
+          *_pm10 = &_misure[PM10],     // PM10
+          *_pm25 = &_misure[PM25];     // PM2.5
     
     // Scelta
-    int   misura;
-    char  mis_name[10];
+    int   _misura;
+    char  _mis_name[10];
 
     // Chiede misura da mettere nel file di output
-    menu(&misura, mis_name);
+    menu(&_misura, _mis_name);
 
     println("Inizio elaborazione");
     println("........................");
 
     // Apre file stream verso i file richiesti
-    FILE *fp = fileOpenRead(fp_name);  // pointer al file delle posizioni
-    FILE *fm = fileOpenRead(fm_name);  // pointer al file delle misure
-    FILE *fo = fileOpenWrite(fo_name); // pointer al file di output
+    FILE *_fp = fileOpenRead(_fp_name);  // pointer al file delle posizioni
+    FILE *_fm = fileOpenRead(_fm_name);  // pointer al file delle misure
+    FILE *_fo = fileOpenWrite(_fo_name); // pointer al file di output
     
     // Ignora prima riga dei file di input
-    csvIgnoreLine(fp);
-    csvIgnoreLine(fm);
+    csvIgnoreLine(_fp);
+    csvIgnoreLine(_fm);
 
     // Stampa intestazione tabella CSV
-    csvPutHeader(fo, 4, "timestamp", "latitudine", "longitudine", mis_name);
+    csvPutHeader(_fo, 4, "timestamp", "latitudine", "longitudine", _mis_name);
 
     // Determina se è possibile continaure o meno
-    volatile bool continuare = true;
+    volatile bool _continuare = true;
 
     // Fino a quando non si raggiunge la fine di uno dei due file di input
-    while (continuare)
+    while (_continuare)
     {
         // Se p_time è minore di m_time, si legge dal file posizioni, altrimenti dal file misure
-        continuare = (p_time < m_time) ? FILE_OK == leggi_pos(fp, &p_time, &p_lat, &p_lon) :
-                                         FILE_OK == leggi_mis(fm, &m_time, no2, voc, pm10, pm25);
+        _continuare = (_p_time < _m_time) ? FILE_OK == leggi_pos(_fp, &_p_time, &_p_lat, &_p_lon) :
+                                            FILE_OK == leggi_mis(_fm, &_m_time, _no2, _voc, _pm10, _pm25);
         
         // Differenza tra i timestamp di misure e posizioni
-        int diff = abs((int)p_time - (int)m_time);
+        int _diff = abs((int)_p_time - (int)_m_time);
         
         // Se la differenza tra i due timestamp è nella forbice accettabile
-        if (diff < MAX_SPREAD)
+        if (_diff < MAX_SPREAD)
             massert(
-                scrivi_out(fo, p_time, p_lat, p_lon, misure[misura]),           // Condizione
-                -4, "Errore nella scrittura del file di output '%s'", fo_name   // Se la condizione non è verificata
+                scrivi_out(_fo, _p_time, _p_lat, _p_lon, _misure[_misura]),           // Condizione
+                -4, "Errore nella scrittura del file di output '%s'", _fo_name        // Se la condizione non è verificata
             );
     }
 
     // Chiusura delle stream su tutti i file
-    fclose(fp);
-    fclose(fm);
-    fclose(fo);
+    fclose(_fp);
+    fclose(_fm);
+    fclose(_fo);
 }
