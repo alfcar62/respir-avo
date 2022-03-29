@@ -81,7 +81,7 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #endif
 
 // Macro per screen clear
-#define CLEAR() system(CLEARSTR)
+#define CLEAR() (void)system(CLEARSTR)
 
 // Scelte
 #define NO2 1               // Costante che rappresenta la scelta di NO2
