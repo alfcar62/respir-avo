@@ -160,8 +160,8 @@ int main(int __argc, char const *__argv[])
                *_fo_name = __argv[3];   // Nome file di output
 
     // Timestamp
-    unsigned long int _p_time, // Timestamp posizioni
-                      _m_time; // Timestamp misure
+    unsigned long int _p_time = 0, // Timestamp posizioni
+                      _m_time = 0; // Timestamp misure
     
     // Posizioni
     float _p_lat,    // Latitudine
@@ -214,7 +214,7 @@ int main(int __argc, char const *__argv[])
         
         // Differenza tra i timestamp di misure e posizioni
         int _diff = abs((int)_p_time - (int)_m_time);
-        
+
         // Se la differenza tra i due timestamp è nella forbice accettabile
         if (_diff < MAX_SPREAD)
             massert(
