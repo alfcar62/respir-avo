@@ -59,12 +59,10 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 ******************************************************************************/
 
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
-#include <stdint.h>
 #include <filelib.h>
 #include <csvlib.h>
 #include <assertlib.h>
@@ -109,12 +107,9 @@ PARAMETRI:
 **************************************************/
 void menu(int *scelta, char nome_mis[])
 {
-    bool err = true;
-
-    do
+    while (true)
     {
         CLEAR();
-        err = false;
 
         // Stampa opzioni
         println("Selezionare misura:");
@@ -130,17 +125,12 @@ void menu(int *scelta, char nome_mis[])
         // Valutazione inpu
         switch (*scelta)
         {
-            case NO2  : strcpy(nome_mis, "NO2 (ppb)");    break;
-            case VOC  : strcpy(nome_mis, "VOC (ppb)");    break;
-            case PM10 : strcpy(nome_mis, "PM10 (ug/m3)"); break;
-            case PM25 : strcpy(nome_mis, "PM25 (ug/m3)"); break;
-
-            default:
-                err = true;
-                println("ERRORE: Opzione %d non valida.", *scelta);
-                break;
+            case NO2  : strcpy(nome_mis, "NO2 (ppb)");    return;
+            case VOC  : strcpy(nome_mis, "VOC (ppb)");    return;
+            case PM10 : strcpy(nome_mis, "PM10 (ug/m3)"); return;
+            case PM25 : strcpy(nome_mis, "PM25 (ug/m3)"); return;
         }
-    } while (err);
+    }
 }
 
 int main(int argc, char const *argv[])
