@@ -151,7 +151,7 @@ int main(int __argc, char const *__argv[])
     sigSetup();
 
     // Si assicura che siano passati tutti i tre argomenti richiesti
-    massert(4 == __argc, -1, "Numero insufficiente di argomenti: Richiesti 3, dati %d", __argc - 1);
+    massert(4 == __argc, -1, "Numero non valido di argomenti: Richiesti 3, dati %d", __argc - 1);
 
     // Nomi file
     const char *_fp_name = __argv[1],   // Nome file posizioni
