@@ -59,6 +59,7 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 ******************************************************************************/
 
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
