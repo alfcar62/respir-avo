@@ -169,24 +169,28 @@ int main(int __argc, char const *__argv[])
 
     // Chiede misura da mettere nel file di output
     menu(&_misura, _mis_name);
-
-    println("Inizio elaborazione");
-    println("........................");
+    println("");
 
     // Apre file stream verso i file richiesti
+    println("Apertura file...");
     FILE *_fp = fileOpenRead(_fp_name);  // pointer al file delle posizioni
     FILE *_fm = fileOpenRead(_fm_name);  // pointer al file delle misure
     FILE *_fo = fileOpenWrite(_fo_name); // pointer al file di output
-    
+
     // Ignora prima riga dei file di input
+    println("Ignorando intestazioni CSV...");
     csvIgnoreLine(_fp);
     csvIgnoreLine(_fm);
 
     // Stampa intestazione tabella CSV
+    println("Inserimento intestazione in file di output...");
     csvPutHeader(_fo, 4, "timestamp", "latitudine", "longitudine", _mis_name);
+
+    printf("\nProgresso:\n[");
 
     // Determina se è possibile continaure o meno
     volatile bool _continuare = true;
+             int  _count      = 0;
 
     // Fino a quando non si raggiunge la fine di uno dei due file di input
     while (_continuare)
@@ -204,10 +208,16 @@ int main(int __argc, char const *__argv[])
                 scrivi_out(_fo, _p_time, _p_lat, _p_lon, _misure[_misura]),           // Condizione
                 -4, "Errore nella scrittura del file di output '%s'", _fo_name        // Se la condizione non è verificata
             );
+
+        if (_count++ % 100 == 0)
+            printf("#");
     }
 
     // Chiusura delle stream su tutti i file
     fclose(_fp);
     fclose(_fm);
     fclose(_fo);
+
+    // Stampa due righe vuote alla fine
+    println("\n");
 }
