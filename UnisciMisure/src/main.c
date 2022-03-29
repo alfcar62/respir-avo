@@ -131,7 +131,7 @@ void menu(int *__scelta, char __nome_mis[])
         println("4. PM2.5");
         
         // Input utente
-        printf("scelta: ");
+        printf("\nscelta: ");
         (void)scanf("%d", __scelta);  // Cast a void utilizzato per annullare valore ritornato
         
         // Valutazione inpu
