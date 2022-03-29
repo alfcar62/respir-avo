@@ -20,16 +20,28 @@ limitations under the License.
 #include <stdlib.h>
 #include <signal.h>
 #include <stdio.h>
+#include <iolib.h>
 
 #define SEGFAULT_ECODE -3
 
 
+/**************************************************************
+DESCRIPTION:
+Static procedure - Used only inside this file
+
+Handles a SIGSEG signal by printing in error message and
+terminating the process.
+**************************************************************/
 static void __SegFaultHandler__(int __signum)
 {
-    printf("ERRORE: Segmentation Fault - Errore di memoria - SIGNUM %d\n", __signum);
+    println("ERRORE: Segmentation Fault - Memory error - SIGNUM %d", __signum);
     exit(SEGFAULT_ECODE);
 }
 
+/************************************
+DESCRIPTION:
+Sets up all necessary signal handlers
+************************************/
 void sigSetup()
 {
     signal(SIGSEGV, __SegFaultHandler__);
