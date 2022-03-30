@@ -146,7 +146,7 @@ void menu(int *__scelta, char __nome_mis[])
     }
 }
 
-int main(int __argc, char const *__argv[])
+int main(int __argc, char **__argv)
 {
     // Inizializza gestore segnali
     sigSetup();
