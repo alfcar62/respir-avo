@@ -13,12 +13,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    
-    - name: configure
-      run: ./configure
-      
+
     - name: Setup directory
-      run: make setup
+      run: cd unicsv; make setup
 
     - name: Build
-      run: make
+      run: cd unicsv; make
