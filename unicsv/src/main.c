@@ -88,12 +88,6 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #define PM10 3              // Costante che rappresenta la scelta di PM10
 #define PM25 4              // Costante che rappresenta la scelta di PM2.5
 
-// massimi limiti consentiti
-#define MAX_NO2 10          // ppb
-#define MAX_VOC 10          // ppb
-#define MAX_PM10 10         // umg/m3
-#define MAX_PM25 10         // umg/m3
-
 #define MAX_SPREAD 60
 
 
