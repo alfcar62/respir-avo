@@ -26,6 +26,7 @@ BINDIR     = bin
 OUTFILE    = unicsv
 OUTFILEEXT = 
 
+DIR_SEP    = /
 rwildcard = $(foreach d, $(wildcard $(1:=/*)), $(call rwildcard ,$d, $2) $(filter $(subst *, %, $2), $d))
 
 INC = $(call rwildcard, $(INCDIR)/impl, *.c)
@@ -39,6 +40,7 @@ DIRS += $(wildcard $(INCDIR)/impl/*)
 
 ifeq ($(OS), Windows_NT)
 	OUTFILEEXT = .exe
+	DIR_SEP    = \\
 endif
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
@@ -58,5 +60,4 @@ run:
 setup:
 	@ mkdir $(BINDIR)
 	@ mkdir $(OBJDIR)
-	cd $(OBJDIR); \
-	@ mkdir impl
+	@ mkdir $(OBJDIR)$(DIR_SEP)impl
