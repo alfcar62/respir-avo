@@ -196,7 +196,7 @@ int main(int __argc, char const *__argv[])
     csvIgnoreLine(_fm);
 
     // Stampa intestazione tabella CSV
-    println("Inserimento intestazione in file di output...");
+    println("Inserendo intestazione in file di output...");
     csvPutHeader(_fo, 4, "timestamp", "latitudine", "longitudine", _mis_name);
 
     printf("\nProgresso:\n[");
