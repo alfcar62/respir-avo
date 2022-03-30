@@ -146,18 +146,18 @@ void menu(int *__scelta, char __nome_mis[])
     }
 }
 
-int main(int __argc, char **__argv)
+int main(int argc, char **argv)
 {
     // Inizializza gestore segnali
     sigSetup();
 
     // Si assicura che siano passati tutti i tre argomenti richiesti
-    massert(4 == __argc, -1, "Numero non valido di argomenti: Richiesti 3, dati %d", __argc - 1);
+    massert(4 == argc, -1, "Numero non valido di argomenti: Richiesti 3, dati %d", argc - 1);
 
     // Nomi file
-    const char *_fp_name = __argv[1],   // Nome file posizioni
-               *_fm_name = __argv[2],   // Nome file misure
-               *_fo_name = __argv[3];   // Nome file di output
+    const char *_fp_name = argv[1],   // Nome file posizioni
+               *_fm_name = argv[2],   // Nome file misure
+               *_fo_name = argv[3];   // Nome file di output
 
     // Timestamp
     unsigned long int _p_time = 0, // Timestamp posizioni
