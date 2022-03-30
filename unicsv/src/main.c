@@ -226,5 +226,5 @@ int main(int argc, char **argv)
     fclose(_fo);
 
     // Stampa due righe vuote alla fine
-    println("\n");
+    println("\t100%\n");
 }
