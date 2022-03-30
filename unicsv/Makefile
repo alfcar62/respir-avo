@@ -58,4 +58,5 @@ run:
 setup:
 	@ mkdir $(BINDIR)
 	@ mkdir $(OBJDIR)
-	@ mkdir $(OBJDIR)/impl
+	cd $(OBJDIR); \
+	@ mkdir impl
