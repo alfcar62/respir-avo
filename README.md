@@ -19,7 +19,7 @@
 
 <p align="center">
   <h1 align="center"> RespirAVO </h1>
-  <p align="center"> RespirAVO è un progetto del <a href=""https://www.itisavogadro.org/">IIS Amedeo Avogadro di Torino</a>, portato avanti dalla classe 3C Informatica (A.S. 2021/22), in collaborazione con altre classi.   </p>
+  <p align="center"> RespirAVO è un progetto del <a href=""https://www.itisavogadro.org/">IIS Amedeo Avogadro di Torino</a>, realizzato dalla classe 3C Informatica (A.S. 2021/22) dell'IIS A. Avogadro di Torino, in collaborazione con altre classi e associazione "Torino Respira". Lo scopo è analizzare la qualità dell'aria che respiriamo a scuola e in generale nel percorso casa-scuola.</p>
 </p>
 
 <div align="center">
