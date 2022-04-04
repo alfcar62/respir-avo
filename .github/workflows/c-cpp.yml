@@ -17,6 +17,11 @@ jobs:
       run: make setup
     - name: Compilazione
       run: make PLATFORM=linux
+    - name: Archiviazione artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: Eseguibile linux
+        path: bin/unicsv-linux
 
   build-windows:
     runs-on: ubuntu-latest
