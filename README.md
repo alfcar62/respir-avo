@@ -2,7 +2,7 @@
 unicsv è un programma work-in-progress scritto in C che permette di unire due file CSV.
 
 <div align="center">
-  <img src="../.github/unicsv.PNG", width="800px" style="left: auto; right: auto">
+  <img src=".github/unicsv.PNG", width="800px" style="left: auto; right: auto">
 </div>
 
 
