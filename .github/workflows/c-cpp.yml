@@ -20,7 +20,7 @@ jobs:
     - name: Archiviazione artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: Eseguibile linux
+        name: unicsv-linux
         path: bin/unicsv-linux
 
   build-windows:
@@ -34,3 +34,8 @@ jobs:
       run: make setup
     - name: Compilazione
       run: make CROSS_COMPILE=x86_64-w64-mingw32- PLATFORM=windows
+    - name: Archiviazione artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: unicsv-windows.exe
+        path: bin/unicsv-windows.exe
