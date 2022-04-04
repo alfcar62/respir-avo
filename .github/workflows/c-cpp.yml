@@ -14,7 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Installazione dipendenze
-      run: sh ./configure.sh
+      run: sh ./.github/workflows/configure.sh
     - name: Setup directory
       run: make setup
     - name: Compilazione
