@@ -15,15 +15,16 @@
 
 
 CXX = gcc
+CC  = $(CROSS_COMPILE)$(CXX)
 
 INCDIR  = include
 CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf -I "src/intf"
-LFLAGS  = -lm
+LFLAGS  = -static -lm
 
 SRCDIR     = src
 OBJDIR     = obj
 BINDIR     = bin
-OUTFILE    = unicsv
+OUTFILE    = unicsv-$(PLATFORM)
 OUTFILEEXT = 
 
 DIR_SEP    = /
@@ -44,15 +45,15 @@ ifeq ($(OS), Windows_NT)
 endif
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CXX) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 $(OBJDIR)/%.o: $(INCDIR)/impl/%.c
-	$(CXX) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 all: $(OBJS) link
 
 link:
-	$(CXX) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(OBJS) $(LFLAGS)
+	$(CC) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(OBJS) $(LFLAGS)
 
 run:
 	$(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(fp) $(fm) $(fo)
