@@ -42,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: unicsv-windows.exe
-        path: bin/unicsv-windows.ex
+        path: bin/unicsv-windows.exe
     - uses: actions/download-artifact@v3
       with:
         name: unicsv-windows.exe
