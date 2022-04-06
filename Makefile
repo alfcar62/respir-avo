@@ -19,7 +19,7 @@ CC  = $(CROSS_COMPILE)$(CXX)
 
 INCDIR  = include
 CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf -I "src/intf"
-LFLAGS  = -static -lm
+LFLAGS  = -lm
 
 SRCDIR     = src
 OBJDIR     = obj
