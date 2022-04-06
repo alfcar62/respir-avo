@@ -22,10 +22,6 @@ jobs:
       with:
         name: unicsv-linux
         path: bin/unicsv-linux
-    - uses: actions/download-artifact@v3
-      with:
-        name: unicsv-linux
-        path: dist/unicsv-linux
 
   build-windows:
     runs-on: ubuntu-latest
@@ -41,9 +37,5 @@ jobs:
     - name: Archiviazione artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: unicsv-windows.exe
+        name: unicsv-windows
         path: bin/unicsv-windows.exe
-    - uses: actions/download-artifact@v3
-      with:
-        name: unicsv-windows.exe
-        path: dist/unicsv-windows.exe
