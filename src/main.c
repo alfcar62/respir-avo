@@ -145,14 +145,6 @@ int main(int argc, char **argv)
     // Inizializza gestore segnali
     sigSetup();
 
-    // Si assicura che siano passati tutti i tre argomenti richiesti
-    massert(4 == argc, -1, "Numero non valido di argomenti: Richiesti 3, dati %d", argc - 1);
-
-    // Nomi file
-    const char *_fp_name = argv[1],   // Nome file posizioni
-               *_fm_name = argv[2],   // Nome file misure
-               *_fo_name = argv[3];   // Nome file di output
-
     // Timestamp
     unsigned long int _p_time = 0, // Timestamp posizioni
                       _m_time = 0; // Timestamp misure
@@ -170,13 +162,25 @@ int main(int argc, char **argv)
           *_pm10 = &_misure[PM10],     // PM10
           *_pm25 = &_misure[PM25];     // PM2.5
     
+    // Nomi file
+    char _fp_name[20],   // Nome file posizioni
+         _fm_name[20],   // Nome file misure
+         _fo_name[20];   // Nome file di output
+
+    // Controllo argomenti commandline - Codice da pulire
+    disegna_logo();
+    massert(argc <= 4, -4, "Troppi argomenti: richiesti massimo 3, forniti %d.", argc);
+    if (argc < 2) { printf("Inserire nome file posizioni: "); scanf("%s", _fp_name);                                            }
+    if (argc < 3) { printf("Inserire nome file misure: ");    scanf("%s", _fm_name);  if (argc == 2) strcpy(_fp_name, argv[1]); }
+    if (argc < 4) { printf("Inserire nome file di output: "); scanf("%s", _fo_name);  if (argc == 3) strcpy(_fm_name, argv[2]); }
+
     // Scelta
     int   _misura;
     char  _mis_name[10];
 
     // Chiede misura da mettere nel file di output
     menu(&_misura, _mis_name);
-    println("");
+    disegna_logo();
 
     // Apre file stream verso i file richiesti
     println("Apertura file...");
