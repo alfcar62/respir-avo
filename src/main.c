@@ -71,7 +71,6 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #include <iolib.h>
 #include "wrappers.h"
 
-
 // Crea costante con comando di clear
 #ifdef _WIN32
     #define CLEARSTR "cls"
@@ -230,5 +229,5 @@ int main(int argc, char **argv)
     fclose(_fo);
 
     // Stampa due righe vuote alla fine
-    println("\t100%\n");
+    println("\t100%%\n");
 }
