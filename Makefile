@@ -24,7 +24,7 @@ LFLAGS  = -lm
 SRCDIR     = src
 OBJDIR     = obj
 BINDIR     = bin
-OUTFILE    = unicsv-$(PLATFORM)
+OUTFILE    = unicsv
 OUTFILEEXT = 
 
 DIR_SEP    = /
