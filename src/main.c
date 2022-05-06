@@ -169,9 +169,10 @@ int main(int argc, char **argv)
     // Controllo argomenti commandline - Codice da pulire
     disegna_logo();
     massert(argc <= 4, -4, "Troppi argomenti: richiesti massimo 3, forniti %d.", argc);
-    if (argc < 2) { printf("Inserire nome file posizioni: "); scanf("%s", _fp_name);                                            }
-    if (argc < 3) { printf("Inserire nome file misure: ");    scanf("%s", _fm_name);  if (argc == 2) strcpy(_fp_name, argv[1]); }
-    if (argc < 4) { printf("Inserire nome file di output: "); scanf("%s", _fo_name);  if (argc == 3) strcpy(_fm_name, argv[2]); }
+    if (argc < 2) { printf("Inserire nome file posizioni: "); scanf("%s", _fp_name); }
+    if (argc < 3) { printf("Inserire nome file misure: ");    scanf("%s", _fm_name); } if (argc >= 2) strcpy(_fp_name, argv[1]);
+    if (argc < 4) { printf("Inserire nome file di output: "); scanf("%s", _fo_name); } if (argc >= 3) strcpy(_fm_name, argv[2]);
+                                                                                       if (argc == 4) strcpy(_fo_name, argv[3]);
 
     // Scelta
     int   _misura;
