@@ -162,9 +162,9 @@ int main(int argc, char **argv)
           *_pm25 = &_misure[PM25];     // PM2.5
     
     // Nomi file
-    char _fp_name[100],   // Nome file posizioni
-         _fm_name[100],   // Nome file misure
-         _fo_name[100];   // Nome file di output
+    char _fp_name[MAX_STR_LEN],   // Nome file posizioni
+         _fm_name[MAX_STR_LEN],   // Nome file misure
+         _fo_name[MAX_STR_LEN];   // Nome file di output
 
     // Controllo argomenti commandline - Codice da pulire
     disegna_logo();
