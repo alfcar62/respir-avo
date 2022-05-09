@@ -93,8 +93,8 @@ int scrivi_out(FILE *__file, pos_t __pos, mis_t __mis, int __opt)
 
     switch (__opt)
     {
-        case NO2  :  _success = fprintf(__file, ",%f", __mis.no2); break;
-        case VOC  :  _success = fprintf(__file, ",%f", __mis.voc); break;
+        case NO2  : _success = fprintf(__file, ",%f", __mis.no2); break;
+        case VOC  : _success = fprintf(__file, ",%f", __mis.voc); break;
         case PM10 : _success = fprintf(__file, ",%f", __mis.pm10); break;
         case PM25 : _success = fprintf(__file, ",%f", __mis.pm25); break;
         case ALL  : _success = fprintf(__file, ",%f,%f,%f,%f", __mis.no2, __mis.voc, __mis.pm10, __mis.pm25); break;
