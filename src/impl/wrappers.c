@@ -88,7 +88,7 @@ RETURN:
 ******************************************************************************/
 int scrivi_out(FILE *__file, pos_t __pos, mis_t __mis, int __opt)
 {
-    bool _success;
+    bool _success = false;
     fprintf(__file, "%lu,%f,%f", __pos.timestamp, __pos.lat, __pos.lon);
 
     switch (__opt)
