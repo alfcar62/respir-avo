@@ -27,17 +27,21 @@ Legge i valori timestamp, latitudine e longitudine dal file delle posizioni.
 
 PARAMETRI:
     - Puntatore a FILE CSV
-    - Puntatore a `unsigned long int` "__time"
-    - Puntatore a `float` "__lat"
-    - Puntatore a `float` "__lon"
+    - Puntatore a `pos_t` "__pos"
 
 RETURN:
     - FILE_OK (0) se l'operazione è stata conclusa con successo
     - Un valore positivo se è stato raggiunto EOF
 ***************************************************************************/
-int leggi_pos(FILE *__file, unsigned long int *__time, float *__lat, float *__lon)
+int leggi_pos(FILE *__file, pos_t *__pos)
 {
-    return csvGetEntries(__file, __time, "%lu", IGNORE, NULL, __lat, "%f", __lon, "%f");
+    return csvGetEntries(
+        __file,                        // Leggi dal file specificato
+        &(__pos->timestamp), "%lu",    // Leggi timestamp
+        IGNORE, NULL,                  // Ignora colonna
+        &(__pos->lat), "%f",           // Leggi latitudine
+        &(__pos->lon), "%f"            // Leggi longitudine
+    );
 }
 
 /***************************************************************************
@@ -46,19 +50,26 @@ Legge i valori timestamp, NO2, VOC, PM10 e PM2.5 dal file delle misure.
 
 PARAMETRI:
     - puntatore a FILE CSV
-    - Puntatore a `unsigned long int` "__time"
-    - Puntatore a `float` "__no2"
-    - Puntatore a `float` "__voc"
-    - Puntatore a `float` "__pm10"
-    - Puntatore a `float` "__pm25"
+    - Puntatore a `mis_t` "__mis"
 
 RETURN:
     - FILE_OK (0) se l'operazione è stata conclusa con successo
     - Un valore positivo se è stato raggiunto EOF
 ***************************************************************************/
-int leggi_mis(FILE *__file, unsigned long int *__time, float *__no2, float *__voc, float *__pm10, float *__pm25)
+int leggi_mis(FILE *__file, mis_t *__mis)
 {
-    return csvGetEntries(__file, __time, "%lu", IGNORE, NULL, __no2, "%f", __voc, "%f", __pm10, "%f", __pm25, "%f", IGNORE, NULL, IGNORE, NULL, IGNORE, NULL, IGNORE, NULL);
+    return csvGetEntries(
+        __file,                        // Leggi dal file delle misure
+        &(__mis->timestamp), "%lu",    // Leggi timestamp
+        IGNORE, NULL,                  // Ignora colonna
+        &(__mis->no2), "%f",           // Leggi valore di NO2
+        &(__mis->voc), "%f",           // Leggi valore di VOC
+        &(__mis->pm10), "%f",          // Leggi valore di PM10
+        &(__mis->pm25), "%f",          // Leggi valore di PM2.5
+        IGNORE, NULL,                  // Ignora colonna
+        IGNORE, NULL,                  // Ignora colonna
+        IGNORE, NULL                   // Ignora colonna
+    );
 }
 
 /******************************************************************************
@@ -67,17 +78,28 @@ Scrive i valori timestamp, latitudine, longitudine e misura sul file di output.
 
 PARAMETRI:
     - Puntatore a FILE CSV
-    - unsigned long int "__time"
-    - float "__lat"
-    - float "__lon"
-    - float "__mis"
+    - `pos_t` "__pos"
+    - `mis_t` "__mis"
+    - mischoice_t "__opt"
 
 RETURN:
     - Un valore positivo se l'operazione è stata conclusa con successo
     - Altrimenti 0
 ******************************************************************************/
-int scrivi_out(FILE *__file, unsigned long int __time, float __lat, float __lon, float __mis)
+int scrivi_out(FILE *__file, pos_t __pos, mis_t __mis, int __opt)
 {
-    // NOTA: Codice temporaneo, manca ancora implementazione per csvPutEntries() in CSVLib
-    return fprintf(__file, "%lu,%f,%f,%f\n", __time, __lat, __lon, __mis);
+    bool _success;
+    fprintf(__file, "%lu,%f,%f", __pos.timestamp, __pos.lat, __pos.lon);
+
+    switch (__opt)
+    {
+        case NO2  :  _success = fprintf(__file, ",%f", __mis.no2); break;
+        case VOC  :  _success = fprintf(__file, ",%f", __mis.voc); break;
+        case PM10 : _success = fprintf(__file, ",%f", __mis.pm10); break;
+        case PM25 : _success = fprintf(__file, ",%f", __mis.pm25); break;
+        case ALL  : _success = fprintf(__file, ",%f,%f,%f,%f", __mis.no2, __mis.voc, __mis.pm10, __mis.pm25); break;
+    }
+
+    fprintf(__file, "\n");
+    return _success;
 }

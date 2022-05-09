@@ -81,12 +81,6 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 // Macro per screen clear
 #define CLEAR() (void)system(CLEARSTR)
 
-// Scelte
-#define NO2 1               // Costante che rappresenta la scelta di NO2
-#define VOC 2               // Costante che rappresenta la scelta di VOC
-#define PM10 3              // Costante che rappresenta la scelta di PM10
-#define PM25 4              // Costante che rappresenta la scelta di PM2.5
-
 #define MAX_SPREAD 60
 
 
@@ -123,6 +117,7 @@ void menu(int *__scelta, char __nome_mis[])
         println("2. VOC");
         println("3. PM10");
         println("4. PM2.5");
+        println("5. Tutte");
         
         // Input utente
         printf("\nscelta: ");
@@ -131,10 +126,11 @@ void menu(int *__scelta, char __nome_mis[])
         // Valutazione inpu
         switch (*__scelta)
         {
-            case NO2  : strcpy(__nome_mis, "NO2 (ppb)");    return;
-            case VOC  : strcpy(__nome_mis, "VOC (ppb)");    return;
-            case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)"); return;
-            case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)"); return;
+            case NO2  : strcpy(__nome_mis, "NO2 (ppb)");                                     return;
+            case VOC  : strcpy(__nome_mis, "VOC (ppb)");                                     return;
+            case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)");                                  return;
+            case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)");                                  return;
+            case ALL  : strcpy(__nome_mis, "NO2 (ppb),VOC (ppb),PM10 (ug/m3),PM25 (ug/m3)"); return;
         }
     }
 }
@@ -143,24 +139,10 @@ int main(int argc, char **argv)
 {
     // Inizializza gestore segnali
     sigSetup();
+    
+    pos_t _pos = { 0 };
+    mis_t _mis = { 0 };
 
-    // Timestamp
-    unsigned long int _p_time = 0, // Timestamp posizioni
-                      _m_time = 0; // Timestamp misure
-    
-    // Posizioni
-    float _p_lat,    // Latitudine
-          _p_lon;    // Longitudine
-    
-    // Array misure
-    float _misure[5];
-
-    // Misure
-    float *_no2  = &_misure[NO2],      // Diossido d'azzoto
-          *_voc  = &_misure[VOC],      // Composti organici volatili
-          *_pm10 = &_misure[PM10],     // PM10
-          *_pm25 = &_misure[PM25];     // PM2.5
-    
     // Nomi file
     char _fp_name[MAX_STR_LEN],   // Nome file posizioni
          _fm_name[MAX_STR_LEN],   // Nome file misure
@@ -176,7 +158,7 @@ int main(int argc, char **argv)
 
     // Scelta
     int   _misura;
-    char  _mis_name[10];
+    char  _mis_name[MAX_STR_LEN];
 
     // Chiede misura da mettere nel file di output
     menu(&_misura, _mis_name);
@@ -207,16 +189,16 @@ int main(int argc, char **argv)
     while (_continuare)
     {
         // Se p_time è minore di m_time, si legge dal file posizioni, altrimenti dal file misure
-        _continuare = (_p_time < _m_time) ? FILE_OK == leggi_pos(_fp, &_p_time, &_p_lat, &_p_lon) :
-                                            FILE_OK == leggi_mis(_fm, &_m_time, _no2, _voc, _pm10, _pm25);
+        _continuare = (_pos.timestamp < _mis.timestamp) ? FILE_OK == leggi_pos(_fp, &_pos) :
+                                                          FILE_OK == leggi_mis(_fm, &_mis);
         
         // Differenza tra i timestamp di misure e posizioni
-        int _diff = abs((int)_p_time - (int)_m_time);
+        int _diff = abs((int)_pos.timestamp - (int)_mis.timestamp);
 
         // Se la differenza tra i due timestamp è nella forbice accettabile
         if (_diff < MAX_SPREAD)
             massert(
-                scrivi_out(_fo, _p_time, _p_lat, _p_lon, _misure[_misura]),           // Condizione
+                scrivi_out(_fo, _pos, _mis, _misura),           // Condizione
                 -4, "Errore nella scrittura del file di output '%s'", _fo_name        // Se la condizione non è verificata
             );
 

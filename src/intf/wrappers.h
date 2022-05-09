@@ -21,6 +21,13 @@ limitations under the License.
 
     #include <stdio.h>
 
+    // Scelte
+    #define NO2 1               // Costante che rappresenta la scelta di NO2
+    #define VOC 2               // Costante che rappresenta la scelta di VOC
+    #define PM10 3              // Costante che rappresenta la scelta di PM10
+    #define PM25 4              // Costante che rappresenta la scelta di PM2.5
+    #define ALL 5
+
 
     typedef struct posizione {
         unsigned long int   timestamp;
@@ -29,23 +36,16 @@ limitations under the License.
     } pos_t;
 
     typedef struct misura {
-        unsigned long int   timestap;
+        unsigned long int   timestamp;
                       float no2;
                       float voc;
                       float pm10;
                       float pm25;
     } mis_t;
 
-    typedef struct attiva_misure {
-        bool no2  : 1;
-        bool voc  : 1;
-        bool pm10 : 1;
-        bool pm25 : 1;
-    } mischoice_t;
 
-
-    int         leggi_pos       (FILE *__file, unsigned long int *__time, float *__lat, float *__lon);
-    int         leggi_mis       (FILE *__file, unsigned long int *__time, float *__no2, float *__voc, float *__pm10, float *__pm25);
-    int         scrivi_out      (FILE *__file, unsigned long int __time, float __lat, float __lon, float __mis);
+    int         leggi_pos       (FILE *__file, pos_t *__pos);
+    int         leggi_mis       (FILE *__file, mis_t *__mis);
+    int         scrivi_out      (FILE *__file, pos_t __pos, mis_t __mis, int __opt);
 
 #endif // WRAPPERS_H
