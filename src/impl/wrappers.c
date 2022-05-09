@@ -68,6 +68,7 @@ int leggi_mis(FILE *__file, mis_t *__mis)
         &(__mis->pm25), "%f",          // Leggi valore di PM2.5
         IGNORE, NULL,                  // Ignora colonna
         IGNORE, NULL,                  // Ignora colonna
+        IGNORE, NULL,                  // Ignora colonna
         IGNORE, NULL                   // Ignora colonna
     );
 }
