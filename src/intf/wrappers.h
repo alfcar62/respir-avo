@@ -22,6 +22,28 @@ limitations under the License.
     #include <stdio.h>
 
 
+    typedef struct posizione {
+        unsigned long int   timestamp;
+                      float lat;
+                      float lon;
+    } pos_t;
+
+    typedef struct misura {
+        unsigned long int   timestap;
+                      float no2;
+                      float voc;
+                      float pm10;
+                      float pm25;
+    } mis_t;
+
+    typedef struct attiva_misure {
+        bool no2  : 1;
+        bool voc  : 1;
+        bool pm10 : 1;
+        bool pm25 : 1;
+    } mischoice_t;
+
+
     int         leggi_pos       (FILE *__file, unsigned long int *__time, float *__lat, float *__lon);
     int         leggi_mis       (FILE *__file, unsigned long int *__time, float *__no2, float *__voc, float *__pm10, float *__pm25);
     int         scrivi_out      (FILE *__file, unsigned long int __time, float __lat, float __lon, float __mis);
