@@ -36,9 +36,6 @@ SRC = $(call rwildcard, $(SRCDIR), *.c)
 OBJS  = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(INCDIR)/impl/%.c, $(OBJDIR)/%.o, $(INC))
 
-DIRS  = $(wildcard $(SRCDIR)/*)
-DIRS += $(wildcard $(INCDIR)/impl/*)
-
 ifeq ($(OS), Windows_NT)
 	OUTFILEEXT = .exe
 	DIR_SEP    = \\
