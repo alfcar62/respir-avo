@@ -185,17 +185,15 @@ int main(int argc, char **argv)
 
     // Controllo argomenti commandline - Codice da pulire
     disegna_logo();
+    arginfo_t _info = parse_args(argc, argv);
 
     // Scelta
     int   _misura;
     char  _mis_name[MAX_STR_LEN];
 
     // Chiede misura da mettere nel file di output
-    // menu(&_misura, _mis_name);
+    menu(&_misura, _mis_name);
     disegna_logo();
-    arginfo_t _info = parse_args(argc, argv);
-    println("Fino a: %d", _info.inogra_fino);
-    return 0;
 
     // Apre file stream verso i file richiesti
     println("Apertura file...");
