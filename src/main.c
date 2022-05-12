@@ -86,11 +86,20 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 // Argomenti
 #define ARG_IGNORA_FINO "-if"
 #define ARG_IGNORA_FINO_INTERO "--ignora-fino"
+#define ARG_POSFILE "-fp"
+#define ARG_POSFILE_INTERO "--file-posizioni"
+#define ARG_MISFILE "-fm"
+#define ARG_MISFILE_INTERO "--file-misure"
+#define ARG_OUTFILE "-fo"
+#define ARG_OUTFILE_INTERO "--file-output"
 
 
 typedef struct arg_info
 {
-    unsigned long int inogra_fino;
+    unsigned long int    inogra_fino;
+             const char *fp;
+             const char *fm;
+             const char *fo;
 } arginfo_t;
 
 void disegna_logo()
@@ -107,7 +116,7 @@ void disegna_logo()
 
 arginfo_t parse_args(int argc, char **argv)
 {
-    arginfo_t _info = { 1 };
+    arginfo_t _info = { 1, NULL, NULL, NULL };
 
     for (int i = 1; i < argc; i++)
     {
@@ -115,6 +124,21 @@ arginfo_t parse_args(int argc, char **argv)
         {
             massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.inogra_fino = atoi(argv[i]);
+        }
+        else if (strcmp(argv[i], ARG_POSFILE) == 0 || strcmp(argv[i], ARG_POSFILE_INTERO) == 0)
+        {
+            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            _info.fp = argv[i];
+        }
+        else if (strcmp(argv[i], ARG_MISFILE) == 0 || strcmp(argv[i], ARG_MISFILE_INTERO) == 0)
+        {
+            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            _info.fm = argv[i];
+        }
+        else if (strcmp(argv[i], ARG_OUTFILE) == 0 || strcmp(argv[i], ARG_OUTFILE_INTERO) == 0)
+        {
+            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            _info.fo = argv[i];
         }
         else
         {
@@ -197,9 +221,9 @@ int main(int argc, char **argv)
 
     // Apre file stream verso i file richiesti
     println("Apertura file...");
-    FILE *_fp = fileOpenRead(_fp_name);  // pointer al file delle posizioni
-    FILE *_fm = fileOpenRead(_fm_name);  // pointer al file delle misure
-    FILE *_fo = fileOpenWrite(_fo_name); // pointer al file di output
+    FILE *_fp = fileOpenRead(_info.fp);  // pointer al file delle posizioni
+    FILE *_fm = fileOpenRead(_info.fm);  // pointer al file delle misure
+    FILE *_fo = fileOpenWrite(_info.fo); // pointer al file di output
 
     // Ignora prima riga dei file di input
     println("Ignorando intestazioni CSV...");
