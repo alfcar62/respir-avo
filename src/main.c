@@ -83,6 +83,10 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 
 #define MAX_SPREAD 60
 
+// Argomenti
+#define ARG_IGNORA_FINO "-if"
+#define ARG_IGNORA_FINO_INTERO "--ignora-fino"
+
 
 typedef struct arg_info
 {
@@ -107,7 +111,7 @@ arginfo_t parse_args(int argc, char **argv)
 
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], "--ignora-fino") == 0 || strcmp(argv[i], "-if") == 0)
+        if (strcmp(argv[i], ARG_IGNORA_FINO_INTERO) == 0 || strcmp(argv[i], ARG_IGNORA_FINO) == 0)
         {
             massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.inogra_fino = atoi(argv[i]);
