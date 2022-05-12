@@ -24,6 +24,41 @@ limitations under the License.
 
 /***************************************************************************
 DESCRIPTION:
+va_list interface for mexit
+
+Arguments are passed as follows:
+    - Exit code
+    - Error message (printf format string)
+    - Error message format values (va_list)
+****************************************************************************/
+void vmexit(int __ecode, const char *__msg, va_list __args)
+{
+    vprintln(__msg, __args);
+    
+    // Exits the program
+    va_end(__args);
+    exit(__ecode);
+}
+
+/***************************************************************************
+DESCRIPTION:
+Custom exit procedure that exits the program with an exit message when called.
+
+Arguments are passed as follows:
+    - Exit code
+    - Error message (printf format string)
+    - Error message format values
+****************************************************************************/
+void mexit(int __ecode, const char *__msg, ...)
+{
+    va_list _arguments;
+    va_start(_arguments, __msg);
+
+    vmexit(__ecode, __msg, _arguments);
+}
+
+/***************************************************************************
+DESCRIPTION:
 Custom assert procedure which exits the program if a condition is not met.
 The procedure also prints an error message and exits with a given exit code.
 
@@ -42,10 +77,6 @@ void massert(bool __condition, int __ecode, const char *__msg, ...)
     va_list _arguments;
     va_start(_arguments, __msg);
 
-    // Prints error message
-    vprintln(__msg, _arguments);
-
-    // Exits the program
-    va_end(_arguments);
-    exit(__ecode);
+    // Prints error message and exits
+    vmexit(__ecode, __msg, _arguments);
 }

@@ -118,8 +118,8 @@ arginfo_t parse_args(int argc, char **argv)
         }
         else
         {
-            massert(false, -5, "Opzione %s non riconosciuta.", argv[i]);
-        }
+            mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
+        } 
     }
 
     return _info;
