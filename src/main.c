@@ -107,7 +107,7 @@ void disegna_logo()
 
 arginfo_t parse_args(int argc, char **argv)
 {
-    arginfo_t _info = { 0 };
+    arginfo_t _info = { 1 };
 
     for (int i = 1; i < argc; i++)
     {
@@ -119,10 +119,16 @@ arginfo_t parse_args(int argc, char **argv)
         else
         {
             mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
-        } 
+        }
     }
 
     return _info;
+}
+
+void ignore_lines(FILE *__file, int __nlines)
+{
+    for (int i = 0; i < __nlines; i++)
+        csvIgnoreLine(__file);
 }
 
 /**************************************************
@@ -199,8 +205,8 @@ int main(int argc, char **argv)
 
     // Ignora prima riga dei file di input
     println("Ignorando intestazioni CSV...");
-    csvIgnoreLine(_fp);
-    csvIgnoreLine(_fm);
+    ignore_lines(_fm, _info.inogra_fino);
+    ignore_lines(_fp, _info.inogra_fino);
 
     // Stampa intestazione tabella CSV
     println("Inserendo intestazione in file di output...");
