@@ -74,7 +74,7 @@ arginfo_t parse_args(int argc, char **argv)
             __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.fo = argv[i];
         }
-        else mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
+        else mexit(INVALID_OPT, "Opzione %s non riconosciuta.", argv[i]);
     }
 
     return _info;
