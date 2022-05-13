@@ -165,6 +165,10 @@ int main(int argc, char **argv)
     int   _misura;
     char  _mis_name[MAX_STR_LEN];
 
+    if (_info.fp == NULL) { printf("Nome file posizioni: "); scanf("%s", _fp_name); _info.fp = _fp_name; }
+    if (_info.fm == NULL) { printf("Nome file misure: ");    scanf("%s", _fm_name); _info.fm = _fm_name; }
+    if (_info.fo == NULL) { printf("Nome file di output: "); scanf("%s", _fo_name); _info.fo = _fo_name; }
+
     // Apre file stream verso i file richiesti
     println("Apertura file...");
     FILE *_fp = fileOpenRead(_info.fp);  // pointer al file delle posizioni
