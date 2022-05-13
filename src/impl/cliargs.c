@@ -22,14 +22,17 @@ limitations under the License.
 
 
 // Argomenti
-#define ARG_IGNORA_FINO "-if"
+#define ARG_IGNORA_FINO        "-if"
 #define ARG_IGNORA_FINO_INTERO "--ignora-fino"
-#define ARG_POSFILE "-fp"
-#define ARG_POSFILE_INTERO "--file-posizioni"
-#define ARG_MISFILE "-fm"
-#define ARG_MISFILE_INTERO "--file-misure"
-#define ARG_OUTFILE "-fo"
-#define ARG_OUTFILE_INTERO "--file-output"
+#define ARG_POSFILE            "-fp"
+#define ARG_POSFILE_INTERO     "--file-posizioni"
+#define ARG_MISFILE            "-fm"
+#define ARG_MISFILE_INTERO     "--file-misure"
+#define ARG_OUTFILE            "-fo"
+#define ARG_OUTFILE_INTERO     "--file-output"
+
+#define TOO_FEW_ARGS -5
+#define INVALID_OPT  -6
 
 
 arginfo_t parse_args(int argc, char **argv)
@@ -40,22 +43,22 @@ arginfo_t parse_args(int argc, char **argv)
     {
         if (strcmp(argv[i], ARG_IGNORA_FINO_INTERO) == 0 || strcmp(argv[i], ARG_IGNORA_FINO) == 0)
         {
-            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.inogra_fino = atoi(argv[i]);
         }
         else if (strcmp(argv[i], ARG_POSFILE) == 0 || strcmp(argv[i], ARG_POSFILE_INTERO) == 0)
         {
-            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fp = argv[i];
         }
         else if (strcmp(argv[i], ARG_MISFILE) == 0 || strcmp(argv[i], ARG_MISFILE_INTERO) == 0)
         {
-            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fm = argv[i];
         }
         else if (strcmp(argv[i], ARG_OUTFILE) == 0 || strcmp(argv[i], ARG_OUTFILE_INTERO) == 0)
         {
-            massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fo = argv[i];
         }
         else mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
