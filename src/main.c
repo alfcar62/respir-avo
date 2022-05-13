@@ -165,15 +165,15 @@ int main(int argc, char **argv)
     int   _misura;
     char  _mis_name[MAX_STR_LEN];
 
-    // Chiede misura da mettere nel file di output
-    menu(&_misura, _mis_name);
-    disegna_logo();
-
     // Apre file stream verso i file richiesti
     println("Apertura file...");
     FILE *_fp = fileOpenRead(_info.fp);  // pointer al file delle posizioni
     FILE *_fm = fileOpenRead(_info.fm);  // pointer al file delle misure
     FILE *_fo = fileOpenWrite(_info.fo); // pointer al file di output
+
+    // Chiede misura da mettere nel file di output
+    menu(&_misura, _mis_name);
+    disegna_logo();
 
     // Ignora prima riga dei file di input
     println("Ignorando intestazioni CSV...");
