@@ -19,6 +19,8 @@ limitations under the License.
 #include <string.h>
 #include <assertlib.h>
 #include <stdlib.h>
+#include <iolib.h>
+#include <stdio.h>
 #include "cliargs.h"
 
 
@@ -31,6 +33,9 @@ limitations under the License.
 #define ARG_MISFILE_INTERO     "--file-misure"
 #define ARG_OUTFILE            "-fo"
 #define ARG_OUTFILE_INTERO     "--file-output"
+#define ARG_HELP               "-h"
+#define ARG_HELP_INTERO        "--help"
+
 
 #define TOO_FEW_ARGS -5
 #define INVALID_OPT  -6
@@ -73,6 +78,17 @@ arginfo_t parse_args(int argc, char **argv)
         {
             __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.fo = argv[i];
+        }
+        else if (__MatchOption__(ARG_HELP_INTERO, ARG_HELP, argv[i]))
+        {
+            println("unicsv help menu");
+            println("USAGE: unicsv [opzioni]\n");
+            println("OPZIONI:");
+            println("\t -fp | --file-posizioni \t | Permette di specificare un file di input per le posizioni");
+            println("\t -fm | --file-misure \t | Permette di specificare un file di input per le misure");
+            println("\t -fo | --file-output \t | Permette di specificare un file di output");
+            println("\t -if | --ignora-fino \t | Permette di ignorare le prime n righe");
+            exit(0);
         }
         else mexit(INVALID_OPT, "Opzione %s non riconosciuta.", argv[i]);
     }
