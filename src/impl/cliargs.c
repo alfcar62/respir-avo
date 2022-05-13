@@ -18,6 +18,7 @@ limitations under the License.
 
 #include <string.h>
 #include <assertlib.h>
+#include <stdlib.h>
 #include "cliargs.h"
 
 
@@ -40,6 +41,13 @@ static bool __MatchOption__(const char *__long, const char *__short, const char 
     return strcmp(__arg, __long) == 0 || strcmp(__arg, __short) == 0;
 }
 
+static void __AssertNumberOfArguments__(int __argn, int __argc, int *__i, const char *__opt)
+{
+    int _si = *__i;
+    *__i   += __argn;
+    massert(*__i < __argc, TOO_FEW_ARGS, "L'Opzione '%s' richiede %d argomenti aggiuntivi. %d forniti.", __opt, __argn, __argc - _si - 1);
+}
+
 arginfo_t parse_args(int argc, char **argv)
 {
     arginfo_t _info = { 1, NULL, NULL, NULL };
@@ -48,22 +56,22 @@ arginfo_t parse_args(int argc, char **argv)
     {
         if (__MatchOption__(ARG_IGNORA_FINO_INTERO, ARG_IGNORA_FINO, argv[i]))
         {
-            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.inogra_fino = atoi(argv[i]);
         }
         else if (__MatchOption__(ARG_POSFILE_INTERO, ARG_POSFILE, argv[i]))
         {
-            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.fp = argv[i];
         }
         else if (__MatchOption__(ARG_MISFILE_INTERO, ARG_MISFILE, argv[i]))
         {
-            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.fm = argv[i];
         }
         else if (__MatchOption__(ARG_OUTFILE_INTERO, ARG_OUTFILE, argv[i]))
         {
-            massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
+            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.fo = argv[i];
         }
         else mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
