@@ -140,10 +140,7 @@ arginfo_t parse_args(int argc, char **argv)
             massert(++i < argc, -4, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fo = argv[i];
         }
-        else
-        {
-            mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
-        }
+        else mexit(-5, "Opzione %s non riconosciuta.", argv[i]);
     }
 
     return _info;
