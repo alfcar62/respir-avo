@@ -35,28 +35,33 @@ limitations under the License.
 #define INVALID_OPT  -6
 
 
+static bool __MatchOption__(const char *__long, const char *__short, const char *__arg)
+{
+    return strcmp(__arg, __long) == 0 || strcmp(__arg, __short) == 0;
+}
+
 arginfo_t parse_args(int argc, char **argv)
 {
     arginfo_t _info = { 1, NULL, NULL, NULL };
 
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], ARG_IGNORA_FINO_INTERO) == 0 || strcmp(argv[i], ARG_IGNORA_FINO) == 0)
+        if (__MatchOption__(ARG_IGNORA_FINO_INTERO, ARG_IGNORA_FINO, argv[i]))
         {
             massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.inogra_fino = atoi(argv[i]);
         }
-        else if (strcmp(argv[i], ARG_POSFILE) == 0 || strcmp(argv[i], ARG_POSFILE_INTERO) == 0)
+        else if (__MatchOption__(ARG_POSFILE_INTERO, ARG_POSFILE, argv[i]))
         {
             massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fp = argv[i];
         }
-        else if (strcmp(argv[i], ARG_MISFILE) == 0 || strcmp(argv[i], ARG_MISFILE_INTERO) == 0)
+        else if (__MatchOption__(ARG_MISFILE_INTERO, ARG_MISFILE, argv[i]))
         {
             massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fm = argv[i];
         }
-        else if (strcmp(argv[i], ARG_OUTFILE) == 0 || strcmp(argv[i], ARG_OUTFILE_INTERO) == 0)
+        else if (__MatchOption__(ARG_OUTFILE_INTERO, ARG_OUTFILE, argv[i]))
         {
             massert(++i < argc, TOO_FEW_ARGS, "Opzione %s richiede un argomento aggiuntivo. 0 forniti.", argv[i]);
             _info.fo = argv[i];
