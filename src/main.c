@@ -186,7 +186,7 @@ int main(int argc, char **argv)
     disegna_logo();
 
     // Ignora prima riga dei file di input
-    println("Ignorando intestazioni CSV...");
+    println("Ignorando %d righe dei CSV...", _info.inogra_fino);
     ignore_lines(_fm, _info.inogra_fino);
     ignore_lines(_fp, _info.inogra_fino);
 
