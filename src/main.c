@@ -151,7 +151,7 @@ void menu(int *__scelta, char __nome_mis[])
     }
 }
 
-int main(int argc, char **argv)
+int main(int __argc_, char **__argv_)
 {
     // Inizializza gestore segnali
     sigSetup();
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 
     // Controllo argomenti commandline - Codice da pulire
     disegna_logo();
-    arginfo_t _info = parse_args(argc, argv);
+    arginfo_t _info = parse_args(__argc_, __argv_);
 
     // Scelta
     char  _mis_name[MAX_STR_LEN];

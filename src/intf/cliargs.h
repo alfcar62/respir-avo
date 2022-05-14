@@ -29,6 +29,6 @@ limitations under the License.
     } arginfo_t;
 
 
-    arginfo_t   parse_args    (int argc, char **argv);
+    arginfo_t   parse_args    (int __argc_, char **__argv_);
 
 #endif // CLIARGS_H

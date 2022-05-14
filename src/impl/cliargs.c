@@ -47,45 +47,45 @@ static bool __MatchOption__(const char *__long, const char *__short, const char 
     return strcmp(__arg, __long) == 0 || strcmp(__arg, __short) == 0;
 }
 
-static void __AssertNumberOfArguments__(int __argn, int __argc_, int *__i, const char *__opt)
+static void __AssertNumberOfArguments__(int __argn, int ____argc__, int *__i, const char *__opt)
 {
     int _si = *__i;
     *__i   += __argn;
-    massert(*__i < __argc_, TOO_FEW_ARGS, "L'Opzione '%s' richiede %d argomenti aggiuntivi. %d forniti.", __opt, __argn, __argc_ - _si - 1);
+    massert(*__i < ____argc__, TOO_FEW_ARGS, "L'Opzione '%s' richiede %d argomenti aggiuntivi. %d forniti.", __opt, __argn, ____argc__ - _si - 1);
 }
 
-arginfo_t parse_args(int argc, char **argv)
+arginfo_t parse_args(int __argc_, char **__argv_)
 {
     arginfo_t _info = { 1, 0, NULL, NULL, NULL };
 
-    for (int i = 1; i < argc; i++)
+    for (int i = 1; i < __argc_; i++)
     {
-        if (__MatchOption__(ARG_IGNORA_FINO_INTERO, ARG_IGNORA_FINO, argv[i]))
+        if (__MatchOption__(ARG_IGNORA_FINO_INTERO, ARG_IGNORA_FINO, __argv_[i]))
         {
-            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
-            _info.inogra_fino = atoi(argv[i]);
+            __AssertNumberOfArguments__(1, __argc_, &i, __argv_[i]);
+            _info.inogra_fino = atoi(__argv_[i]);
         }
-        else if (__MatchOption__(ARG_POSFILE_INTERO, ARG_POSFILE, argv[i]))
+        else if (__MatchOption__(ARG_POSFILE_INTERO, ARG_POSFILE, __argv_[i]))
         {
-            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
-            _info.fp = argv[i];
+            __AssertNumberOfArguments__(1, __argc_, &i, __argv_[i]);
+            _info.fp = __argv_[i];
         }
-        else if (__MatchOption__(ARG_MISFILE_INTERO, ARG_MISFILE, argv[i]))
+        else if (__MatchOption__(ARG_MISFILE_INTERO, ARG_MISFILE, __argv_[i]))
         {
-            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
-            _info.fm = argv[i];
+            __AssertNumberOfArguments__(1, __argc_, &i, __argv_[i]);
+            _info.fm = __argv_[i];
         }
-        else if (__MatchOption__(ARG_OUTFILE_INTERO, ARG_OUTFILE, argv[i]))
+        else if (__MatchOption__(ARG_OUTFILE_INTERO, ARG_OUTFILE, __argv_[i]))
         {
-            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
-            _info.fo = argv[i];
+            __AssertNumberOfArguments__(1, __argc_, &i, __argv_[i]);
+            _info.fo = __argv_[i];
         }
-        else if (__MatchOption__(ARG_MISNAME_INTERO, ARG_MISNAME, argv[i]))
+        else if (__MatchOption__(ARG_MISNAME_INTERO, ARG_MISNAME, __argv_[i]))
         {
-            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
-            _info.mis = atoi(argv[i]);
+            __AssertNumberOfArguments__(1, __argc_, &i, __argv_[i]);
+            _info.mis = atoi(__argv_[i]);
         }
-        else if (__MatchOption__(ARG_HELP_INTERO, ARG_HELP, argv[i]))
+        else if (__MatchOption__(ARG_HELP_INTERO, ARG_HELP, __argv_[i]))
         {
             println("unicsv help menu");
             println("USAGE: unicsv [opzioni]\n");
@@ -98,7 +98,7 @@ arginfo_t parse_args(int argc, char **argv)
 
             exit(0);
         }
-        else mexit(INVALID_OPT, "Opzione '%s' non riconosciuta.", argv[i]);
+        else mexit(INVALID_OPT, "Opzione '%s' non riconosciuta.", __argv_[i]);
     }
 
     return _info;
