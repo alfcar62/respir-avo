@@ -46,11 +46,11 @@ static bool __MatchOption__(const char *__long, const char *__short, const char 
     return strcmp(__arg, __long) == 0 || strcmp(__arg, __short) == 0;
 }
 
-static void __AssertNumberOfArguments__(int __argn, int __argc, int *__i, const char *__opt)
+static void __AssertNumberOfArguments__(int __argn, int __argc_, int *__i, const char *__opt)
 {
     int _si = *__i;
     *__i   += __argn;
-    massert(*__i < __argc, TOO_FEW_ARGS, "L'Opzione '%s' richiede %d argomenti aggiuntivi. %d forniti.", __opt, __argn, __argc - _si - 1);
+    massert(*__i < __argc_, TOO_FEW_ARGS, "L'Opzione '%s' richiede %d argomenti aggiuntivi. %d forniti.", __opt, __argn, __argc_ - _si - 1);
 }
 
 arginfo_t parse_args(int argc, char **argv)
