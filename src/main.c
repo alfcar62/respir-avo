@@ -54,8 +54,8 @@ WINDOWS: mingw32-make
 POSIX:  make
 
 @esecuzione:
-WINDOWS: mingw32-make run fp=posizioni.csv fm=misure.csv fo=out.csv
-POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
+WINDOWS: .\bin\unicsv.exe -fp .\posizioni.csv -fm .\misure.csv -fo .\out.csv -um 5
+POSIX: ./bin/unicsv -fp ./posizioni.csv -fm ./misure.csv -fo ./out.csv -um 5
 ******************************************************************************/
 
 
