@@ -105,6 +105,21 @@ void ignore_lines(FILE *__file, int __nlines)
         csvIgnoreLine(__file);
 }
 
+bool numero_a_misura(int __scelta, char __nome_mis[])
+{
+    // Valutazione inpu
+    switch (__scelta)
+    {
+        case NO2  : strcpy(__nome_mis, "NO2 (ppb)");                                     return true;
+        case VOC  : strcpy(__nome_mis, "VOC (ppb)");                                     return true;
+        case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)");                                  return true;
+        case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)");                                  return true;
+        case ALL  : strcpy(__nome_mis, "NO2 (ppb),VOC (ppb),PM10 (ug/m3),PM25 (ug/m3)"); return true;
+    }
+
+    return false;
+}
+
 /**************************************************
 DESCRIZIONE:
 Visualizza un menu' che permette di sceglere la
@@ -132,15 +147,7 @@ void menu(int *__scelta, char __nome_mis[])
         printf("\nscelta: ");
         (void)scanf("%d", __scelta);  // Cast a void utilizzato per annullare valore ritornato
         
-        // Valutazione inpu
-        switch (*__scelta)
-        {
-            case NO2  : strcpy(__nome_mis, "NO2 (ppb)");                                     return;
-            case VOC  : strcpy(__nome_mis, "VOC (ppb)");                                     return;
-            case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)");                                  return;
-            case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)");                                  return;
-            case ALL  : strcpy(__nome_mis, "NO2 (ppb),VOC (ppb),PM10 (ug/m3),PM25 (ug/m3)"); return;
-        }
+        if (numero_a_misura(*__scelta, __nome_mis)) return;
     }
 }
 
@@ -162,7 +169,6 @@ int main(int argc, char **argv)
     arginfo_t _info = parse_args(argc, argv);
 
     // Scelta
-    int   _misura;
     char  _mis_name[MAX_STR_LEN];
 
     if (_info.fp == NULL) { printf("Nome file posizioni: "); scanf("%s", _fp_name); _info.fp = _fp_name; }
@@ -176,7 +182,7 @@ int main(int argc, char **argv)
     FILE *_fo = fileOpenWrite(_info.fo); // pointer al file di output
 
     // Chiede misura da mettere nel file di output
-    menu(&_misura, _mis_name);
+    if (_info.mis == 0) { menu(&_info.mis, _mis_name); } else { massert(numero_a_misura(_info.mis, _mis_name), -7, "ID Misura %d non valido.", _info.mis); }
     disegna_logo();
 
     // Ignora prima riga dei file di input
@@ -207,7 +213,7 @@ int main(int argc, char **argv)
         // Se la differenza tra i due timestamp è nella forbice accettabile
         if (_diff < MAX_SPREAD)
             massert(
-                scrivi_out(_fo, _pos, _mis, _misura),           // Condizione
+                scrivi_out(_fo, _pos, _mis, _info.mis),           // Condizione
                 -4, "Errore nella scrittura del file di output '%s'", _fo_name        // Se la condizione non è verificata
             );
 
