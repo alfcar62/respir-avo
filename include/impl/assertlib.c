@@ -20,6 +20,7 @@ limitations under the License.
 #include <stdarg.h>
 #include <stdlib.h>
 #include <iolib.h>
+#include <stdio.h>
 
 
 /***************************************************************************
@@ -33,6 +34,7 @@ Arguments are passed as follows:
 ****************************************************************************/
 void vmexit(int __ecode, const char *__msg, va_list __args)
 {
+    printf("ERRORE: ");
     vprintln(__msg, __args);
     
     // Exits the program
