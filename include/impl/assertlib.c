@@ -39,6 +39,11 @@ void vmexit(int __ecode, const char *__msg, va_list __args)
     
     // Exits the program
     va_end(__args);
+
+    #ifdef _WIN32
+        system("pause");
+    #endif
+
     exit(__ecode);
 }
 

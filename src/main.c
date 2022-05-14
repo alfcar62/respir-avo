@@ -164,26 +164,26 @@ int main(int __argc_, char **__argv_)
          _fm_name[MAX_STR_LEN],   // Nome file misure
          _fo_name[MAX_STR_LEN];   // Nome file di output
 
+    // Scelta
+    char  _mis_name[MAX_STR_LEN];
+
     // Controllo argomenti commandline - Codice da pulire
     disegna_logo();
     arginfo_t _info = parse_args(__argc_, __argv_);
-
-    // Scelta
-    char  _mis_name[MAX_STR_LEN];
 
     if (_info.fp == NULL) { printf("Nome file posizioni: "); scanf("%s", _fp_name); _info.fp = _fp_name; }
     if (_info.fm == NULL) { printf("Nome file misure: ");    scanf("%s", _fm_name); _info.fm = _fm_name; }
     if (_info.fo == NULL) { printf("Nome file di output: "); scanf("%s", _fo_name); _info.fo = _fo_name; }
 
     // Apre file stream verso i file richiesti
+    disegna_logo();
     println("Apertura file...");
     FILE *_fp = fileOpenRead(_info.fp);  // pointer al file delle posizioni
     FILE *_fm = fileOpenRead(_info.fm);  // pointer al file delle misure
     FILE *_fo = fileOpenWrite(_info.fo); // pointer al file di output
 
     // Chiede misura da mettere nel file di output
-    if (_info.mis == 0) { menu(&_info.mis, _mis_name); } else { massert(numero_a_misura(_info.mis, _mis_name), -7, "ID Misura %d non valido.", _info.mis); }
-    disegna_logo();
+    if (_info.mis == 0) { menu(&_info.mis, _mis_name); disegna_logo(); } else { massert(numero_a_misura(_info.mis, _mis_name), -7, "ID Misura %d non valido.", _info.mis); }
 
     // Ignora prima riga dei file di input
     println("Ignorando %d righe dei CSV...", _info.inogra_fino);
@@ -228,4 +228,8 @@ int main(int __argc_, char **__argv_)
 
     // Stampa due righe vuote alla fine
     println("\t100%%\n");
+
+    #ifdef _WIN32
+        system("pause");
+    #endif
 }
