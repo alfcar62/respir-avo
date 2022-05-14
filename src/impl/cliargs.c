@@ -36,7 +36,6 @@ limitations under the License.
 #define ARG_HELP               "-h"
 #define ARG_HELP_INTERO        "--help"
 
-
 #define TOO_FEW_ARGS -5
 #define INVALID_OPT  -6
 
