@@ -1,0 +1,41 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup directory
+      run: make setup
+    - name: Compilazione
+      run: make
+    - name: Archiviazione artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: unicsv-linux
+        path: bin/unicsv
+
+  build-windows:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    - name: Installazione dipendenze
+      run: sh ./.github/workflows/configure.sh
+    - name: Setup directory
+      run: make setup
+    - name: Compilazione
+      run: make CROSS_COMPILE=x86_64-w64-mingw32-
+    - name: Archiviazione artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: unicsv-windows
+        path: bin/unicsv.exe

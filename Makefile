@@ -15,6 +15,7 @@
 
 
 CXX = gcc
+CC  = $(CROSS_COMPILE)$(CXX)
 
 INCDIR  = include
 CFLAGS  = -O3 -Wall -Wextra -g -I $(INCDIR)/intf -I "src/intf"
@@ -35,27 +36,21 @@ SRC = $(call rwildcard, $(SRCDIR), *.c)
 OBJS  = $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(INCDIR)/impl/%.c, $(OBJDIR)/%.o, $(INC))
 
-DIRS  = $(wildcard $(SRCDIR)/*)
-DIRS += $(wildcard $(INCDIR)/impl/*)
-
 ifeq ($(OS), Windows_NT)
 	OUTFILEEXT = .exe
 	DIR_SEP    = \\
 endif
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CXX) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 $(OBJDIR)/%.o: $(INCDIR)/impl/%.c
-	$(CXX) $(CFLAGS) -c $^ -o $@
+	$(CC) $(CFLAGS) -c $^ -o $@
 
 all: $(OBJS) link
 
 link:
-	$(CXX) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(OBJS) $(LFLAGS)
-
-run:
-	$(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(fp) $(fm) $(fo)
+	$(CC) -o $(BINDIR)/$(OUTFILE)$(OUTFILEEXT) $(OBJS) $(LFLAGS)
 
 setup:
 	@ mkdir $(BINDIR)

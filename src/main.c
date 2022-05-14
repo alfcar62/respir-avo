@@ -51,11 +51,11 @@ che sono distanti temporalmente  meno di 1 minuto  tra i due file
 
 @compilazione:
 WINDOWS: mingw32-make
-POSIX:  make
+POSIX: make
 
 @esecuzione:
-WINDOWS: mingw32-make run fp=posizioni.csv fm=misure.csv fo=out.csv
-POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
+WINDOWS: .\bin\unicsv.exe -fp .\posizioni.csv -fm .\misure.csv -fo .\out.csv -um 5
+POSIX: ./bin/unicsv -fp ./posizioni.csv -fm ./misure.csv -fo ./out.csv -um 5
 ******************************************************************************/
 
 
@@ -70,7 +70,7 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 #include <siglib.h>
 #include <iolib.h>
 #include "wrappers.h"
-
+#include "cliargs.h"
 
 // Crea costante con comando di clear
 #ifdef _WIN32
@@ -81,12 +81,6 @@ POSIX:  make run fp=posizioni.csv fm=misure.csv fo=out.csv
 
 // Macro per screen clear
 #define CLEAR() (void)system(CLEARSTR)
-
-// Scelte
-#define NO2 1               // Costante che rappresenta la scelta di NO2
-#define VOC 2               // Costante che rappresenta la scelta di VOC
-#define PM10 3              // Costante che rappresenta la scelta di PM10
-#define PM25 4              // Costante che rappresenta la scelta di PM2.5
 
 #define MAX_SPREAD 60
 
@@ -101,6 +95,29 @@ void disegna_logo()
     println(" | | | | '_ \\| |/ __/ __\\ \\ / /");
     println(" | |_| | | | | | (__\\__ \\\\ V / ");
     println("  \\__,_|_| |_|_|\\___|___/ \\_/  \n\n");
+}
+
+
+
+void ignore_lines(FILE *__file, int __nlines)
+{
+    for (int i = 0; i < __nlines; i++)
+        csvIgnoreLine(__file);
+}
+
+bool numero_a_misura(int __scelta, char __nome_mis[])
+{
+    // Valutazione inpu
+    switch (__scelta)
+    {
+        case NO2  : strcpy(__nome_mis, "NO2 (ppb)");                                     return true;
+        case VOC  : strcpy(__nome_mis, "VOC (ppb)");                                     return true;
+        case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)");                                  return true;
+        case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)");                                  return true;
+        case ALL  : strcpy(__nome_mis, "NO2 (ppb),VOC (ppb),PM10 (ug/m3),PM25 (ug/m3)"); return true;
+    }
+
+    return false;
 }
 
 /**************************************************
@@ -124,70 +141,54 @@ void menu(int *__scelta, char __nome_mis[])
         println("2. VOC");
         println("3. PM10");
         println("4. PM2.5");
+        println("5. Tutte");
         
         // Input utente
         printf("\nscelta: ");
         (void)scanf("%d", __scelta);  // Cast a void utilizzato per annullare valore ritornato
         
-        // Valutazione inpu
-        switch (*__scelta)
-        {
-            case NO2  : strcpy(__nome_mis, "NO2 (ppb)");    return;
-            case VOC  : strcpy(__nome_mis, "VOC (ppb)");    return;
-            case PM10 : strcpy(__nome_mis, "PM10 (ug/m3)"); return;
-            case PM25 : strcpy(__nome_mis, "PM25 (ug/m3)"); return;
-        }
+        if (numero_a_misura(*__scelta, __nome_mis)) return;
     }
 }
 
-int main(int argc, char **argv)
+int main(int __argc_, char **__argv_)
 {
     // Inizializza gestore segnali
     sigSetup();
-
-    // Si assicura che siano passati tutti i tre argomenti richiesti
-    massert(4 == argc, -1, "Numero non valido di argomenti: Richiesti 3, dati %d", argc - 1);
+    
+    pos_t _pos = { 0 };
+    mis_t _mis = { 0 };
 
     // Nomi file
-    const char *_fp_name = argv[1],   // Nome file posizioni
-               *_fm_name = argv[2],   // Nome file misure
-               *_fo_name = argv[3];   // Nome file di output
+    char _fp_name[MAX_STR_LEN],   // Nome file posizioni
+         _fm_name[MAX_STR_LEN],   // Nome file misure
+         _fo_name[MAX_STR_LEN];   // Nome file di output
 
-    // Timestamp
-    unsigned long int _p_time = 0, // Timestamp posizioni
-                      _m_time = 0; // Timestamp misure
-    
-    // Posizioni
-    float _p_lat,    // Latitudine
-          _p_lon;    // Longitudine
-    
-    // Array misure
-    float _misure[5];
-
-    // Misure
-    float *_no2  = &_misure[NO2],      // Diossido d'azzoto
-          *_voc  = &_misure[VOC],      // Composti organici volatili
-          *_pm10 = &_misure[PM10],     // PM10
-          *_pm25 = &_misure[PM25];     // PM2.5
-    
     // Scelta
-    int   _misura;
-    char  _mis_name[10];
+    char  _mis_name[MAX_STR_LEN];
 
-    // Chiede misura da mettere nel file di output
-    menu(&_misura, _mis_name);
-    println("");
+    // Controllo argomenti commandline - Codice da pulire
+    disegna_logo();
+    arginfo_t _info = parse_args(__argc_, __argv_);
+
+    if (_info.fp == NULL) { printf("Nome file posizioni: "); scanf("%s", _fp_name); _info.fp = _fp_name; }
+    if (_info.fm == NULL) { printf("Nome file misure: ");    scanf("%s", _fm_name); _info.fm = _fm_name; }
+    if (_info.fo == NULL) { printf("Nome file di output: "); scanf("%s", _fo_name); _info.fo = _fo_name; }
 
     // Apre file stream verso i file richiesti
+    disegna_logo();
     println("Apertura file...");
-    FILE *_fp = fileOpenRead(_fp_name);  // pointer al file delle posizioni
-    FILE *_fm = fileOpenRead(_fm_name);  // pointer al file delle misure
-    FILE *_fo = fileOpenWrite(_fo_name); // pointer al file di output
+    FILE *_fp = fileOpenRead(_info.fp);  // pointer al file delle posizioni
+    FILE *_fm = fileOpenRead(_info.fm);  // pointer al file delle misure
+    FILE *_fo = fileOpenWrite(_info.fo); // pointer al file di output
+
+    // Chiede misura da mettere nel file di output
+    if (_info.mis == 0) { menu(&_info.mis, _mis_name); disegna_logo(); } else { massert(numero_a_misura(_info.mis, _mis_name), -7, "ID Misura %d non valido.", _info.mis); }
 
     // Ignora prima riga dei file di input
-    println("Ignorando intestazioni CSV...");
-    csvIgnoreLine(_fp);
-    csvIgnoreLine(_fm);
+    println("Ignorando %d righe dei CSV...", _info.inogra_fino);
+    ignore_lines(_fm, _info.inogra_fino);
+    ignore_lines(_fp, _info.inogra_fino);
 
     // Stampa intestazione tabella CSV
     println("Inserendo intestazione in file di output...");
@@ -203,17 +204,17 @@ int main(int argc, char **argv)
     while (_continuare)
     {
         // Se p_time è minore di m_time, si legge dal file posizioni, altrimenti dal file misure
-        _continuare = (_p_time < _m_time) ? FILE_OK == leggi_pos(_fp, &_p_time, &_p_lat, &_p_lon) :
-                                            FILE_OK == leggi_mis(_fm, &_m_time, _no2, _voc, _pm10, _pm25);
+        _continuare = (_pos.timestamp < _mis.timestamp) ? FILE_OK == leggi_pos(_fp, &_pos) :
+                                                          FILE_OK == leggi_mis(_fm, &_mis);
         
         // Differenza tra i timestamp di misure e posizioni
-        int _diff = abs((int)_p_time - (int)_m_time);
+        int _diff = abs((int)_pos.timestamp - (int)_mis.timestamp);
 
         // Se la differenza tra i due timestamp è nella forbice accettabile
         if (_diff < MAX_SPREAD)
             massert(
-                scrivi_out(_fo, _p_time, _p_lat, _p_lon, _misure[_misura]),           // Condizione
-                -4, "Errore nella scrittura del file di output '%s'", _fo_name        // Se la condizione non è verificata
+                scrivi_out(_fo, _pos, _mis, _info.mis),           // Condizione
+                -4, "Scrittura su '%s' fallita.", _fo_name        // Se la condizione non è verificata
             );
 
         if (_count++ % 100 == 0)
@@ -226,5 +227,9 @@ int main(int argc, char **argv)
     fclose(_fo);
 
     // Stampa due righe vuote alla fine
-    println("\t100%\n");
+    println("\t100%%\n");
+
+    #ifdef _WIN32
+        system("pause");
+    #endif
 }
