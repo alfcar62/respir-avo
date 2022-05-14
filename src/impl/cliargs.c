@@ -35,6 +35,8 @@ limitations under the License.
 #define ARG_OUTFILE_INTERO     "--file-output"
 #define ARG_HELP               "-h"
 #define ARG_HELP_INTERO        "--help"
+#define ARG_MISNAME            "-um"
+#define ARG_MISNAME_INTERO     "--unisci-misura"
 
 #define TOO_FEW_ARGS -5
 #define INVALID_OPT  -6
@@ -54,7 +56,7 @@ static void __AssertNumberOfArguments__(int __argn, int __argc_, int *__i, const
 
 arginfo_t parse_args(int argc, char **argv)
 {
-    arginfo_t _info = { 1, NULL, NULL, NULL };
+    arginfo_t _info = { 1, 0, NULL, NULL, NULL };
 
     for (int i = 1; i < argc; i++)
     {
@@ -78,6 +80,11 @@ arginfo_t parse_args(int argc, char **argv)
             __AssertNumberOfArguments__(1, argc, &i, argv[i]);
             _info.fo = argv[i];
         }
+        else if (__MatchOption__(ARG_MISNAME_INTERO, ARG_MISNAME, argv[i]))
+        {
+            __AssertNumberOfArguments__(1, argc, &i, argv[i]);
+            _info.mis = atoi(argv[i]);
+        }
         else if (__MatchOption__(ARG_HELP_INTERO, ARG_HELP, argv[i]))
         {
             println("unicsv help menu");
@@ -86,7 +93,9 @@ arginfo_t parse_args(int argc, char **argv)
             println("\t-fp | --file-posizioni\t| Permette di specificare un file di input per le posizioni");
             println("\t-fm | --file-misure\t| Permette di specificare un file di input per le misure");
             println("\t-fo | --file-output\t| Permette di specificare un file di output");
+            println("\t-um | --unisci-misura\t| Permette di sceglere la misura da unire");
             println("\t-if | --ignora-fino\t| Permette di ignorare le prime n righe");
+
             exit(0);
         }
         else mexit(INVALID_OPT, "Opzione '%s' non riconosciuta.", argv[i]);

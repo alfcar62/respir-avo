@@ -21,7 +21,8 @@ limitations under the License.
 
     typedef struct arg_info
     {
-        unsigned long int    inogra_fino;
+        unsigned long int   inogra_fino;
+                      int   mis;
                 const char *fp;
                 const char *fm;
                 const char *fo;
