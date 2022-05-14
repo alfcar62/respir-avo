@@ -90,7 +90,7 @@ arginfo_t parse_args(int argc, char **argv)
             println("\t-if | --ignora-fino\t| Permette di ignorare le prime n righe");
             exit(0);
         }
-        else mexit(INVALID_OPT, "Opzione %s non riconosciuta.", argv[i]);
+        else mexit(INVALID_OPT, "Opzione '%s' non riconosciuta.", argv[i]);
     }
 
     return _info;
