@@ -51,7 +51,7 @@ che sono distanti temporalmente  meno di 1 minuto  tra i due file
 
 @compilazione:
 WINDOWS: mingw32-make
-POSIX:  make
+POSIX: make
 
 @esecuzione:
 WINDOWS: .\bin\unicsv.exe -fp .\posizioni.csv -fm .\misure.csv -fo .\out.csv -um 5
