@@ -214,7 +214,7 @@ int main(int argc, char **argv)
         if (_diff < MAX_SPREAD)
             massert(
                 scrivi_out(_fo, _pos, _mis, _info.mis),           // Condizione
-                -4, "Errore nella scrittura del file di output '%s'", _fo_name        // Se la condizione non è verificata
+                -4, "Scrittura su '%s' fallita.", _fo_name        // Se la condizione non è verificata
             );
 
         if (_count++ % 100 == 0)
