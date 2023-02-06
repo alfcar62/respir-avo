@@ -39,6 +39,9 @@
   gcc -o UnisciMisure.exe UnisciMisure.cpp
   x eseguire: 
   ./UnisciMisure.exe
+  
+  Per visualizzare su UMAP:
+  1) Impostazioni -> Layers -> Interaction Options->Stile del contenuto del popup: tabella
 */
 
 #define MAX_LINES 1000			// massimo n. di linee
