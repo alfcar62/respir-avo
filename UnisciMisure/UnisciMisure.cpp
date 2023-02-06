@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 /*  @data:marzo 2022
     @auhor: classe 3CI as 2021/22
@@ -346,7 +347,16 @@ int scrivi_out(FILE *fp, unsigned long int time, double lat, double lon, int tip
   char superato_limite[10] = "NO";
   int ret;
   int perc_sup;
-  
+  time_t rawtime;
+  struct tm  ts;
+  char   buf_time[80];
+
+  rawtime = time;
+    // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
+    ts = *localtime(&rawtime);
+    strftime(buf_time, sizeof(buf_time), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
+    printf("%s\n", buf_time);
+
   switch(tipo_mis)
    {
    	case NO2: misura  = no2;
@@ -374,9 +384,9 @@ int scrivi_out(FILE *fp, unsigned long int time, double lat, double lon, int tip
   return OK;   
  */
   if (misura == ALL)
-    fprintf(fp,"\n%ld,%f,%f,%f,%f,%f,%f",time, lat, lon, no2, voc, pm10, pm25);
+    fprintf(fp,"\n%s,%f,%f,%f,%f,%f,%f",buf_time, lat, lon, no2, voc, pm10, pm25);
   else
-    fprintf(fp,"\n%ld,%f,%f,%f",time, lat, lon, misura);
+    fprintf(fp,"\n%s,%f,%f,%f",buf_time, lat, lon, misura);
   return OK;   
 }
 
