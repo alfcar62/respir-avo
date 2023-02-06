@@ -39,9 +39,6 @@
   gcc -o UnisciMisure.exe UnisciMisure.cpp
   x eseguire: 
   ./UnisciMisure.exe
-  
-  Per visualizzare su UMAP:
-  1) Impostazioni -> Layers -> Interaction Options->Stile del contenuto del popup: tabella
 */
 
 #define MAX_LINES 1000			// massimo n. di linee
@@ -65,6 +62,8 @@
 #define MAX_PM10 10  //umg/m3 
 #define MAX_PM25 10  //umg/m3
 
+#define MAX_SEC_P_M 60  // MAX n. di secondi di differenza tra posizione e misura 
+#define MIN_SEC_P_P 30  // MIN n. di secondi di differenza tra due posizioni successive 
 
 int  leggi_pos (FILE *fp, unsigned long int *time, float *lat, float *lon);
 int  leggi_mis (FILE *fp, unsigned long int *time, float *no2, float *voc, float *pm10, float *pm25);
@@ -83,6 +82,7 @@ int main()
   char fp_name[MAX_STR_LEN],fm_name[MAX_STR_LEN],fo_name[MAX_STR_LEN];
   int ret;
   unsigned long int p_time, m_time;         //timestamp
+  unsigned long int p_time_prec, p_sec_trasc;
   float p_lat, p_lon;                //coordinate
   float voc,no2,pm25,pm10;       //misurazioni
   float mis_medio;
@@ -154,11 +154,19 @@ int main()
       goto FINE;
    }
    
-   
+   p_time_prec = p_time - MIN_SEC_P_P; // solo la prima volta
    do
    { 
+     p_sec_trasc = p_time - p_time_prec; 
      difftime = abs((int) p_time - (int) m_time);
-     if (difftime <60)      //meno di 1 minuto di differenza
+     p_time_prec = p_time;
+
+     // considero valida la misura letta se:
+     // 1: sono trascorsi meno di  MAX_SEC_P_M secondi tra la misura e la posizione lette
+     // 2: sono trascorsi più di MIN_SEC_P_P secondi tra due posizioni successive
+     if ((difftime < MAX_SEC_P_M)       //1:      
+         && 
+         (p_sec_trasc >= MIN_SEC_P_P))  //2:
       { 
   //      printf("\n p_time = %lu", p_time);
   //      printf(" m_time = %lu", m_time);
@@ -172,6 +180,7 @@ int main()
        }
      if (p_time < m_time)
       { 
+       p_time_prec = p_time;  // salvo il time della posizione
        ret= leggi_pos(fp, &p_time, &p_lat, &p_lon);
        if (ret != OK )
         {
@@ -358,7 +367,7 @@ int scrivi_out(FILE *fp, unsigned long int time, double lat, double lon, int tip
     // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
     ts = *localtime(&rawtime);
     strftime(buf_time, sizeof(buf_time), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
-  //  printf("%s\n", buf_time);
+   // printf("%s\n", buf_time);
 
   switch(tipo_mis)
    {
