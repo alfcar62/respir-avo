@@ -358,7 +358,7 @@ int scrivi_out(FILE *fp, unsigned long int time, double lat, double lon, int tip
     // Format time, "ddd yyyy-mm-dd hh:mm:ss zzz"
     ts = *localtime(&rawtime);
     strftime(buf_time, sizeof(buf_time), "%a %Y-%m-%d %H:%M:%S %Z", &ts);
-    printf("%s\n", buf_time);
+  //  printf("%s\n", buf_time);
 
   switch(tipo_mis)
    {
