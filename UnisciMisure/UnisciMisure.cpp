@@ -134,9 +134,9 @@ int main()
   }
 
  // prima riga intestazione
- // fprintf(fo,"timestamp,latitude,longitude,%s,superato limite, percentuale sup",mis_name);
+ // fprintf(fo,"time,latitude,longitude,%s,superato limite, percentuale sup",mis_name);
  
- fprintf(fo,"timestamp,latitude,longitude,%s",mis_name);
+ fprintf(fo,"time,latitude,longitude,%s",mis_name);
 
   ret= leggi_pos(fp, &p_time, &p_lat, &p_lon);
   if (ret != OK)
